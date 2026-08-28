@@ -3,433 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports Betting Dashboard Mockup</title>
+    <title>1xBet - Log In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #0b1520;
-            --bg-secondary: #122131;
-            --bg-header: #0e1c2a;
-            --accent-blue: #329df0;
-            --accent-green: #569e26;
-            --text-main: #ffffff;
-            --text-muted: #8d9ba8;
-            --border-color: #1f3b56;
+            --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40;
+            --text-main: #ffffff; --text-muted: #8d9ba8;
+            --accent-blue: #238cf5; --accent-blue-hover: #1a7ae0;
+            --border-color: #1a3148;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            font-size: 14px;
-        }
-
-        /* --- Header --- */
-        header {
-            background-color: var(--bg-header);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--text-main);
-            font-style: italic;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         
+        body {
+            background: linear-gradient(135deg, var(--bg-base) 0%, #060b11 100%);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .auth-container {
+            background: var(--bg-panel);
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .logo-header { text-align: center; margin-bottom: 30px; cursor: pointer; }
+        .logo { font-size: 28px; font-weight: 900; font-style: italic; letter-spacing: -0.5px; }
         .logo span { color: var(--accent-blue); }
 
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            list-style: none;
+        .auth-title { font-size: 18px; font-weight: 700; margin-bottom: 25px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; font-weight: 600; }
+        .input-group input { 
+            width: 100%; padding: 14px; background: var(--bg-card); 
+            border: 1px solid var(--border-color); color: white; 
+            border-radius: 6px; font-size: 14px; outline: none; transition: 0.2s;
         }
+        .input-group input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(35, 140, 245, 0.1); }
 
-        .nav-links li {
-            font-weight: 500;
-            cursor: pointer;
+        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 12px; }
+        .checkbox-group { display: flex; align-items: center; gap: 8px; color: var(--text-muted); cursor: pointer; }
+        .forgot-link { color: var(--accent-blue); text-decoration: none; font-weight: 500; }
+        .forgot-link:hover { text-decoration: underline; }
+
+        .btn-submit { 
+            width: 100%; padding: 15px; background: var(--accent-blue); 
+            color: white; font-size: 14px; font-weight: 700; border: none; 
+            border-radius: 6px; cursor: pointer; text-transform: uppercase; transition: 0.2s;
         }
+        .btn-submit:hover { background: var(--accent-blue-hover); transform: translateY(-1px); }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-        }
-
-        .btn-solid {
-            background: var(--accent-green);
-            color: var(--text-main);
-        }
-
-        /* --- Main Layout --- */
-        .layout-container {
-            display: grid;
-            grid-template-columns: 240px 1fr 300px;
-            gap: 20px;
-            padding: 20px;
-            height: calc(100vh - 60px);
-            overflow: hidden;
-        }
-
-        /* --- Left Sidebar --- */
-        .sidebar-left, .sidebar-right {
-            background-color: var(--bg-main);
-            overflow-y: auto;
-        }
-
-        .menu-section {
-            background-color: var(--bg-secondary);
-            border-radius: 8px;
-            margin-bottom: 15px;
-            overflow: hidden;
-        }
-
-        .menu-header {
-            padding: 12px 15px;
-            background-color: #17293d;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .menu-list {
-            list-style: none;
-        }
-
-        .menu-list li {
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-        }
-        
-        .menu-list li:hover { background-color: #17293d; }
-        .count { color: var(--text-muted); }
-
-        /* --- Center Content --- */
-        .main-content {
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Hero Banner */
-        .hero-banner {
-            background: linear-gradient(135deg, #0d2745, #081729);
-            border-radius: 8px;
-            padding: 30px;
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-text { z-index: 2; }
-        .hero-text h1 { font-size: 1.5rem; margin-bottom: 10px; }
-        .hero-text h2 { font-size: 2.5rem; color: var(--accent-blue); margin-bottom: 15px; }
-        .hero-text p { margin-bottom: 20px; color: #ddd; max-width: 300px;}
-        
-        .hero-image-placeholder {
-            width: 250px;
-            height: 250px;
-            background: rgba(50, 157, 240, 0.1);
-            border-radius: 50%;
-            position: absolute;
-            right: 50px;
-            top: -20px;
-            border: 2px dashed var(--accent-blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-blue);
-        }
-
-        /* Horizontal Sports Nav */
-        .horizontal-nav {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-
-        .nav-card {
-            background-color: var(--bg-secondary);
-            padding: 15px 25px;
-            border-radius: 8px;
-            min-width: 100px;
-            text-align: center;
-            cursor: pointer;
-            border: 1px solid transparent;
-        }
-
-        .nav-card:hover { border-color: var(--border-color); }
-        .nav-card span { display: block; margin-top: 8px; color: var(--text-muted); }
-
-        /* Match Grid */
-        .section-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .section-title .dot { width: 8px; height: 8px; background: red; border-radius: 50%; display: inline-block; }
-        
-        .match-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-        }
-
-        .match-card {
-            background-color: var(--bg-secondary);
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .match-header {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-bottom: 15px;
-        }
-
-        .teams {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .team { text-align: center; flex: 1; }
-        .score { font-size: 1.5rem; font-weight: bold; padding: 0 15px; text-align: center; }
-        .score-time { font-size: 11px; color: var(--accent-blue); display: block; font-weight: normal; margin-top: 5px; }
-
-        .odds-row {
-            display: flex;
-            gap: 5px;
-        }
-
-        .odd-btn {
-            background-color: var(--bg-main);
-            border: none;
-            padding: 10px;
-            flex: 1;
-            color: var(--text-main);
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            cursor: pointer;
-        }
-
-        .odd-btn span:last-child { color: var(--accent-blue); font-weight: bold; }
-
-        /* --- Right Sidebar --- */
-        .bet-slip-tabs {
-            display: flex;
-            margin-bottom: 15px;
-        }
-        
-        .bet-slip-tabs div {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            background: var(--bg-secondary);
-            cursor: pointer;
-        }
-        
-        .bet-slip-tabs .active {
-            background: var(--accent-blue);
-            font-weight: bold;
-        }
-
-        .empty-slip {
-            background: var(--bg-secondary);
-            padding: 40px 20px;
-            text-align: center;
-            color: var(--text-muted);
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .btn-full { width: 100%; padding: 12px; background: var(--accent-blue); color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-
+        .auth-footer { margin-top: 25px; text-align: center; font-size: 12px; color: var(--text-muted); }
+        .auth-footer a { color: var(--text-main); font-weight: 600; text-decoration: none; margin-left: 5px; }
+        .auth-footer a:hover { color: var(--accent-blue); }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-left">
+    <div class="auth-container">
+        <div class="logo-header" onclick="window.location.href='index.html'">
             <div class="logo">1X<span>BET</span></div>
-            <button class="btn btn-solid" style="background:#569e26; font-size: 10px; padding: 4px 8px;">NEW APP</button>
-            <ul class="nav-links">
-                <li>SPORTS ▾</li>
-                <li>LIVE ▾</li>
-                <li>1XGAMES ▾</li>
-                <li>CASINO ▾</li>
-                <li>ESPORTS ▾</li>
-                <li>PROMO ▾</li>
-            </ul>
         </div>
-        <div class="header-right">
-            <button class="btn btn-outline">LOG IN</button>
-            <button class="btn btn-solid">REGISTRATION</button>
-            <span>⚙️</span>
-            <span>🕒 15:30</span>
-            <span>🇬🇧 EN ▾</span>
-        </div>
-    </header>
-
-    <div class="layout-container">
         
-        <!-- LEFT SIDEBAR -->
-        <aside class="sidebar-left">
-            <div class="menu-section">
-                <div class="menu-header">TOP Championships</div>
-                <ul class="menu-list">
-                    <li><span>⚽ UEFA Champions League</span></li>
-                    <li><span>⚽ Premier League</span></li>
-                    <li><span>⚽ La Liga</span></li>
-                    <li><span>🏀 NBA</span></li>
-                    <li><span>🥊 UFC</span></li>
-                    <li><span>🎮 Esports</span></li>
-                </ul>
+        <div class="auth-title">Log in to your account</div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Email or ID</label>
+                <input type="text" id="userId" placeholder="Enter your email or ID" required>
             </div>
             
-            <div class="menu-section">
-                <div class="menu-header">SPORTS</div>
-                <ul class="menu-list">
-                    <li><span>⚽ Football</span> <span class="count">1267</span></li>
-                    <li><span>🎾 Tennis</span> <span class="count">342</span></li>
-                    <li><span>🏀 Basketball</span> <span class="count">289</span></li>
-                    <li><span>🏏 Cricket</span> <span class="count">221</span></li>
-                    <li><span>🏐 Volleyball</span> <span class="count">167</span></li>
-                </ul>
-            </div>
-        </aside>
-
-        <!-- CENTER CONTENT -->
-        <main class="main-content">
-            
-            <div class="hero-banner">
-                <div class="hero-text">
-                    <h1>WELCOME BONUS</h1>
-                    <h2>100% UP TO ₹10,000</h2>
-                    <p>Make your first deposit and get 100% bonus up to ₹10,000!</p>
-                    <button class="btn btn-solid">REGISTER NOW</button>
-                </div>
-                <div class="hero-image-placeholder">
-                    [ Player Graphic Area ]
-                </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="userPwd" placeholder="••••••••" required>
             </div>
 
-            <div class="horizontal-nav">
-                <div class="nav-card">📺 <br><span>Live</span></div>
-                <div class="nav-card">⚽ <br><span>Football</span></div>
-                <div class="nav-card">🎾 <br><span>Tennis</span></div>
-                <div class="nav-card">🏀 <br><span>Basketball</span></div>
-                <div class="nav-card">🏏 <br><span>Cricket</span></div>
-                <div class="nav-card">🎰 <br><span>1xGames</span></div>
-                <div class="nav-card">🎲 <br><span>Casino</span></div>
+            <div class="form-options">
+                <label class="checkbox-group">
+                    <input type="checkbox" checked> Remember me
+                </label>
+                <a href="#" class="forgot-link">Forgot password?</a>
             </div>
 
-            <div class="section-title">
-                <span class="dot"></span> LIVE <span style="font-size:12px; font-weight:normal; color:#8d9ba8;">• 120 Events</span>
-            </div>
+            <button type="submit" class="btn-submit">Log In</button>
+        </form>
 
-            <div class="match-grid">
-                <!-- Match 1 -->
-                <div class="match-card">
-                    <div class="match-header">⚽ Football - UEFA Champions League</div>
-                    <div class="teams">
-                        <div class="team">Man City</div>
-                        <div class="score">
-                            2 : 1
-                            <span class="score-time">45:32 2nd Half</span>
-                        </div>
-                        <div class="team">Real Madrid</div>
-                    </div>
-                    <div class="odds-row">
-                        <button class="odd-btn"><span>1</span> <span>1.65</span></button>
-                        <button class="odd-btn"><span>X</span> <span>3.80</span></button>
-                        <button class="odd-btn"><span>2</span> <span>5.20</span></button>
-                    </div>
-                </div>
-
-                <!-- Match 2 -->
-                <div class="match-card">
-                    <div class="match-header">🏏 Cricket - IPL 2024</div>
-                    <div class="teams">
-                        <div class="team">MI</div>
-                        <div class="score">
-                            175/6
-                            <span class="score-time">18.4 Overs</span>
-                        </div>
-                        <div class="team">CSK</div>
-                    </div>
-                    <div class="odds-row">
-                        <button class="odd-btn"><span>1</span> <span>1.85</span></button>
-                        <button class="odd-btn"><span>2</span> <span>1.95</span></button>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-
-        <!-- RIGHT SIDEBAR -->
-        <aside class="sidebar-right">
-            <div class="bet-slip-tabs">
-                <div class="active">BET SLIP</div>
-                <div>MY BETS</div>
-            </div>
-            
-            <div class="empty-slip">
-                <div style="font-size: 2rem; margin-bottom:10px;">🎟️</div>
-                Your bet slip is empty.<br>
-                Add events to the bet slip<br>
-                or enter a code to load events.
-            </div>
-
-            <button class="btn-full">REGISTER AND PLACE BET</button>
-            
-            <br><br>
-            <div class="menu-section">
-                <div class="menu-header" style="background:transparent; border-bottom:none;">LIVE NOW</div>
-                <ul class="menu-list">
-                    <li>⚽ Football <br> Man City vs Real Madrid</li>
-                    <li>🏏 Cricket <br> MI vs CSK</li>
-                </ul>
-            </div>
-        </aside>
-
+        <div class="auth-footer">
+            Don't have an account? <a href="signup.html">Register Now</a>
+        </div>
     </div>
 
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simulate backend authentication delay
+            const btn = document.querySelector('.btn-submit');
+            btn.innerHTML = 'Authenticating...';
+            btn.style.opacity = '0.8';
+            
+            setTimeout(() => {
+                alert("Login Successful! Welcome back.");
+                window.location.href = 'index.html';
+            }, 800);
+        });
+    </script>
 </body>
 </html>
