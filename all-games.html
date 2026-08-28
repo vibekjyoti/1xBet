@@ -1,0 +1,192 @@
+<!-- Save this as all-games.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1xBet - All Games</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40; --bg-hover: #1e3650; --bg-header: #0d1a27;
+            --text-main: #ffffff; --text-muted: #8d9ba8; --text-dark: #a1b1c2;
+            --accent-blue: #238cf5; --accent-green: #5c9e28;
+            --border-color: #1a3148;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        
+        /* Header */
+        header { background-color: var(--bg-header); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; min-height: 60px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .logo { font-size: 22px; font-weight: 900; font-style: italic; cursor: pointer; transition: 0.2s; }
+        .logo:hover { transform: scale(1.05); }
+        .logo span { color: var(--accent-blue); }
+        .header-right { display: flex; gap: 15px; align-items: center; }
+        .wallet { background: var(--bg-card); padding: 8px 15px; border-radius: 4px; font-weight: bold; border: 1px solid var(--accent-blue); font-size: 13px; }
+        .close-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-weight: 600; font-size: 12px; text-transform: uppercase; }
+        .close-btn:hover { color: white; border-color: white; }
+
+        /* Layout */
+        .layout-container { display: flex; flex-direction: column; padding: 30px; max-width: 1400px; margin: 0 auto; width: 100%; flex: 1; }
+        
+        /* Page Header & Filters */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+        .page-title { font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+        
+        .filter-tabs { display: flex; gap: 10px; }
+        .filter-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-muted); padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: 700; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
+        .filter-btn:hover { background: var(--bg-hover); color: white; border-color: var(--text-muted); }
+        .filter-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); box-shadow: 0 4px 15px rgba(35, 140, 245, 0.4); }
+
+        /* Search Bar */
+        .search-bar { position: relative; width: 300px; }
+        .search-bar input { width: 100%; background: var(--bg-panel); border: 1px solid var(--border-color); color: white; padding: 12px 15px 12px 40px; border-radius: 30px; font-size: 13px; outline: none; transition: 0.2s; }
+        .search-bar input:focus { border-color: var(--accent-blue); }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); opacity: 0.5; font-size: 14px; }
+
+        /* Games Grid */
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        
+        .game-thumb { aspect-ratio: 4/3; border-radius: 8px; display: flex; align-items: flex-end; padding: 15px; font-weight: 800; font-size: 16px; cursor: pointer; position: relative; overflow: hidden; box-shadow: inset 0 -50px 50px -10px rgba(0,0,0,0.9); border: 1px solid var(--border-color); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-decoration: none; color: white; }
+        .game-thumb:hover { transform: translateY(-8px) scale(1.02); border-color: var(--text-main); box-shadow: inset 0 -50px 50px -10px rgba(0,0,0,0.9), 0 15px 25px rgba(0,0,0,0.5); z-index: 2; }
+        .game-thumb::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent); transform: skewX(-25deg); transition: 0.5s; }
+        .game-thumb:hover::before { left: 200%; }
+        
+        .tag { position: absolute; top: 10px; right: 10px; font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .tag.hot { background: rgba(255, 170, 0, 0.2); color: #ffaa00; border: 1px solid #ffaa00; }
+        .tag.live { background: rgba(92, 158, 40, 0.2); color: #5c9e28; border: 1px solid #5c9e28; }
+
+        /* Background Colors for Thumbnails */
+        .bg-crash { background: linear-gradient(45deg, #1a1543, #4a1c6a); }
+        .bg-aviator { background: linear-gradient(45deg, #510a12, #a51829); }
+        .bg-mines { background: linear-gradient(45deg, #093c6b, #1579d6); }
+        .bg-tower { background: linear-gradient(45deg, #320d5c, #6c1cb5); }
+        .bg-wheel { background: linear-gradient(45deg, #7c4d00, #d69800); }
+        .bg-matka { background: linear-gradient(135deg, #0f2b15, #1d5229); }
+        .bg-roul { background: linear-gradient(135deg, #2b0f0f, #521d1d); }
+        .bg-bac { background: linear-gradient(135deg, #2b1d0f, #52381d); }
+        .bg-andar { background: linear-gradient(135deg, #4a1c1c, #7a2020); }
+        .bg-teen { background: linear-gradient(135deg, #2e1045, #150524); }
+        
+        .empty-state { display: none; text-align: center; padding: 50px; color: var(--text-muted); font-size: 16px; font-weight: 600; grid-column: 1 / -1; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
+        <div class="header-right">
+            <div class="wallet">₹ 10000.00</div>
+            <button class="close-btn" onclick="window.location.href='index.html'">BACK TO HUB</button>
+        </div>
+    </header>
+
+    <div class="layout-container">
+        
+        <div class="page-header">
+            <div class="page-title">
+                <span style="font-size: 28px;">🎮</span> ALL GAMES
+            </div>
+            
+            <div class="filter-tabs" id="filters">
+                <button class="filter-btn active" data-filter="all">All Games</button>
+                <button class="filter-btn" data-filter="1xgames">1XGAMES</button>
+                <button class="filter-btn" data-filter="casino">Live Casino</button>
+            </div>
+
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search games...">
+            </div>
+        </div>
+
+        <div class="games-grid" id="gamesGrid">
+            <!-- 1XGAMES -->
+            <a href="aviator.html" class="game-thumb bg-aviator" data-category="1xgames">
+                Aviator <span class="tag hot">HOT</span>
+            </a>
+            <a href="crash.html" class="game-thumb bg-crash" data-category="1xgames">
+                Crash <span class="tag live">LIVE</span>
+            </a>
+            <a href="mines.html" class="game-thumb bg-mines" data-category="1xgames">
+                Mines
+            </a>
+            <a href="chicken-rush.html" class="game-thumb bg-tower" data-category="1xgames">
+                Chicken Rush
+            </a>
+            <a href="wheel.html" class="game-thumb bg-wheel" data-category="1xgames">
+                Lucky Wheel
+            </a>
+
+            <!-- CASINO & LOCAL -->
+            <a href="matka.html" class="game-thumb bg-matka" data-category="casino">
+                Matka Live <span class="tag hot">HOT</span>
+            </a>
+            <a href="roulette.html" class="game-thumb bg-roul" data-category="casino">
+                Roulette Live
+            </a>
+            <a href="baccarat.html" class="game-thumb bg-bac" data-category="casino">
+                Baccarat Live
+            </a>
+            <a href="andar-bahar.html" class="game-thumb bg-andar" data-category="casino">
+                Andar Bahar
+            </a>
+            <a href="teen-patti.html" class="game-thumb bg-teen" data-category="casino">
+                Teen Patti
+            </a>
+            
+            <div class="empty-state" id="emptyState">No games found matching your search.</div>
+        </div>
+
+    </div>
+
+    <script>
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('searchInput');
+        const games = document.querySelectorAll('.game-thumb');
+        const emptyState = document.getElementById('emptyState');
+        let currentCategory = 'all';
+
+        // Filter by Tab
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active state
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                currentCategory = btn.getAttribute('data-filter');
+                filterGames();
+            });
+        });
+
+        // Search functionality
+        searchInput.addEventListener('input', filterGames);
+
+        function filterGames() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let visibleCount = 0;
+
+            games.forEach(game => {
+                const category = game.getAttribute('data-category');
+                const title = game.innerText.toLowerCase();
+                
+                const matchesCategory = currentCategory === 'all' || category === currentCategory;
+                const matchesSearch = title.includes(searchTerm);
+
+                if (matchesCategory && matchesSearch) {
+                    game.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    game.style.display = 'none';
+                }
+            });
+
+            emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
