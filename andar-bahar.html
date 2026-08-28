@@ -1,0 +1,240 @@
+<!-- Save this as andar-bahar.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1xBet - Andar Bahar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40;
+            --text-main: #ffffff; --text-muted: #8d9ba8;
+            --accent-blue: #238cf5; --accent-green: #28a745; --accent-red: #e6003d; --accent-yellow: #ffaa00;
+            --border-color: #1a3148;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+        
+        header { background: var(--bg-header); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 22px; font-weight: 900; font-style: italic; cursor: pointer; }
+        .logo span { color: var(--accent-blue); }
+        .header-right { display: flex; gap: 15px; align-items: center; }
+        .wallet { background: var(--bg-card); padding: 8px 15px; border-radius: 4px; font-weight: bold; border: 1px solid var(--accent-blue); }
+        .close-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .close-btn:hover { color: white; border-color: white; }
+
+        .layout { display: flex; flex-direction: column; align-items: center; padding: 30px 20px; flex: 1; gap: 20px; }
+
+        /* Game Table */
+        .table { background: radial-gradient(circle, #782020 0%, #3d1010 100%); width: 100%; max-width: 1000px; padding: 30px; border-radius: 12px; border: 4px solid var(--accent-yellow); box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 30px; position: relative; }
+        
+        .status-toast { text-align: center; font-size: 18px; font-weight: 900; color: var(--accent-yellow); letter-spacing: 2px; text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; }
+
+        /* Playing Card Style */
+        .playing-card { width: 70px; height: 100px; background: white; border-radius: 6px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: black; font-weight: 900; font-size: 22px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid #ccc; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-right: -40px; }
+        .playing-card:last-child { margin-right: 0; }
+        .card-red { color: #e6003d; }
+        .card-black { color: #111; }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.5) translateX(-20px); } to { opacity: 1; transform: scale(1) translateX(0); } }
+
+        /* Game Areas */
+        .joker-area { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px dashed var(--accent-yellow); }
+        .area-title { font-size: 14px; font-weight: bold; color: rgba(255,255,255,0.6); margin-bottom: 10px; letter-spacing: 1px; }
+        
+        .sides-container { display: flex; flex-direction: column; gap: 20px; }
+        .side-row { display: flex; align-items: center; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; min-height: 140px; }
+        .side-label { width: 120px; font-size: 24px; font-weight: 900; text-transform: uppercase; }
+        .label-andar { color: var(--accent-blue); }
+        .label-bahar { color: var(--accent-red); }
+        .card-flow { display: flex; flex-direction: row; flex-wrap: wrap; padding-left: 20px; }
+
+        /* Betting Area */
+        .betting-board { display: flex; gap: 15px; width: 100%; max-width: 1000px; margin-top: 10px; }
+        .bet-btn { flex: 1; background: var(--bg-panel); border: 2px solid var(--border-color); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .bet-btn:hover { background: var(--bg-hover); transform: translateY(-2px); }
+        .bet-btn.selected { border-color: var(--accent-yellow); box-shadow: 0 0 15px rgba(255,170,0,0.4); }
+        
+        .btn-andar .bet-title { color: var(--accent-blue); font-size: 20px; font-weight: 900; }
+        .btn-bahar .bet-title { color: var(--accent-red); font-size: 20px; font-weight: 900; }
+        .bet-payout { font-size: 12px; color: var(--text-muted); font-weight: bold; margin-top: 5px; }
+
+        /* Controls */
+        .controls { display: flex; gap: 15px; width: 100%; max-width: 1000px; background: var(--bg-panel); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .input-group { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .input-group label { font-size: 11px; color: var(--text-muted); font-weight: bold; text-transform: uppercase; }
+        .input-group input { width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); color: white; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 4px; outline: none; }
+        
+        .btn-deal { flex: 1; background: var(--accent-green); color: white; font-size: 20px; font-weight: 900; border: none; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn-deal:hover:not(:disabled) { background: #1e7e34; }
+        .btn-deal:disabled { background: #333; color: #666; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
+        <div class="header-right">
+            <div class="wallet">₹ <span id="balance">10000.00</span></div>
+            <button class="close-btn" onclick="window.location.href='index.html'">HUB</button>
+        </div>
+    </header>
+
+    <div class="layout">
+        
+        <div class="table">
+            <div class="status-toast" id="statusToast">WAITING FOR BETS</div>
+            
+            <div class="joker-area">
+                <div class="area-title">JOKER CARD</div>
+                <div id="jokerSpot" style="height: 100px; display: flex; align-items: center; justify-content: center;">
+                    <!-- Joker Card Injected Here -->
+                </div>
+            </div>
+
+            <div class="sides-container">
+                <div class="side-row">
+                    <div class="side-label label-andar">ANDAR</div>
+                    <div class="card-flow" id="andarFlow"></div>
+                </div>
+                <div class="side-row">
+                    <div class="side-label label-bahar">BAHAR</div>
+                    <div class="card-flow" id="baharFlow"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="betting-board">
+            <div class="bet-btn btn-andar" onclick="selectBet('ANDAR', this)">
+                <div class="bet-title">ANDAR</div>
+                <div class="bet-payout">PAYS 1.90x</div>
+            </div>
+            <div class="bet-btn btn-bahar" onclick="selectBet('BAHAR', this)">
+                <div class="bet-title">BAHAR</div>
+                <div class="bet-payout">PAYS 2.00x</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label>BET AMOUNT (₹)</label>
+                <input type="number" id="betAmount" value="500" min="50">
+            </div>
+            <button class="btn-deal" id="dealBtn" onclick="startRound()">START ROUND</button>
+        </div>
+
+    </div>
+
+    <script>
+        const balanceDisplay = document.getElementById('balance');
+        const statusToast = document.getElementById('statusToast');
+        const dealBtn = document.getElementById('dealBtn');
+        const jokerSpot = document.getElementById('jokerSpot');
+        const andarFlow = document.getElementById('andarFlow');
+        const baharFlow = document.getElementById('baharFlow');
+
+        let balance = 10000.00;
+        let isDealing = false;
+        let selectedBet = null;
+
+        const suits = ['♠', '♥', '♦', '♣'];
+        const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+        function generateCard() {
+            const suit = suits[Math.floor(Math.random() * suits.length)];
+            const val = values[Math.floor(Math.random() * values.length)];
+            const colorClass = (suit === '♥' || suit === '♦') ? 'card-red' : 'card-black';
+            
+            const cardEl = document.createElement('div');
+            cardEl.className = `playing-card ${colorClass}`;
+            cardEl.innerHTML = `<div>${val}</div><div>${suit}</div>`;
+            
+            return { element: cardEl, rank: val };
+        }
+
+        function selectBet(type, el) {
+            if (isDealing) return;
+            document.querySelectorAll('.bet-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedBet = type;
+            statusToast.innerText = `BET SECURED ON ${type}`;
+        }
+
+        function startRound() {
+            if (!selectedBet) return alert('Please bet on ANDAR or BAHAR.');
+            
+            const betAmt = parseFloat(document.getElementById('betAmount').value);
+            if (betAmt > balance) return alert('Insufficient Balance!');
+
+            balance -= betAmt;
+            balanceDisplay.innerText = balance.toFixed(2);
+            
+            isDealing = true;
+            dealBtn.disabled = true;
+            statusToast.innerText = 'DEALING JOKER...';
+            
+            jokerSpot.innerHTML = '';
+            andarFlow.innerHTML = '';
+            baharFlow.innerHTML = '';
+
+            // 1. Draw Joker
+            setTimeout(() => {
+                const jokerCard = generateCard();
+                jokerSpot.appendChild(jokerCard.element);
+                const targetRank = jokerCard.rank;
+                statusToast.innerText = `MATCHING RANK: ${targetRank}`;
+                
+                // 2. Start Dealing Loop
+                setTimeout(() => {
+                    dealUntilMatch(targetRank, betAmt);
+                }, 1000);
+
+            }, 500);
+        }
+
+        function dealUntilMatch(targetRank, betAmt) {
+            let currentSide = 'ANDAR'; // Traditional rules alternate
+            
+            const interval = setInterval(() => {
+                const draw = generateCard();
+                
+                if (currentSide === 'ANDAR') {
+                    andarFlow.appendChild(draw.element);
+                } else {
+                    baharFlow.appendChild(draw.element);
+                }
+
+                if (draw.rank === targetRank) {
+                    clearInterval(interval);
+                    resolveRound(currentSide, betAmt);
+                } else {
+                    currentSide = currentSide === 'ANDAR' ? 'BAHAR' : 'ANDAR';
+                }
+            }, 600); // Deal speed
+        }
+
+        function resolveRound(winningSide, betAmt) {
+            setTimeout(() => {
+                if (winningSide === selectedBet) {
+                    const multiplier = winningSide === 'ANDAR' ? 1.90 : 2.00;
+                    const winnings = betAmt * multiplier;
+                    balance += winnings;
+                    balanceDisplay.innerText = balance.toFixed(2);
+                    statusToast.innerText = `${winningSide} WINS! YOU WON ₹${winnings.toFixed(2)}`;
+                    statusToast.style.color = 'var(--accent-green)';
+                } else {
+                    statusToast.innerText = `${winningSide} WINS! YOU LOST.`;
+                    statusToast.style.color = 'var(--accent-red)';
+                }
+
+                setTimeout(() => {
+                    isDealing = false;
+                    dealBtn.disabled = false;
+                    statusToast.innerText = 'WAITING FOR BETS';
+                    statusToast.style.color = 'var(--accent-yellow)';
+                }, 3000);
+            }, 500);
+        }
+    </script>
+</body>
+</html>

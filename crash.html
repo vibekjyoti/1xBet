@@ -1,0 +1,221 @@
+<!-- Save this as crash.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1xBet - Classic Crash</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40;
+            --text-main: #ffffff; --text-muted: #8d9ba8;
+            --accent-blue: #238cf5; --accent-green: #5c9e28; --accent-red: #ff3333;
+            --border-color: #1a3148;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        header { background: var(--bg-header); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 22px; font-weight: 900; font-style: italic; cursor: pointer; }
+        .logo span { color: var(--accent-blue); }
+        .header-right { display: flex; gap: 15px; align-items: center; }
+        .wallet { background: var(--bg-card); padding: 8px 15px; border-radius: 4px; font-weight: bold; border: 1px solid var(--accent-blue); }
+        .close-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        .close-btn:hover { color: white; border-color: white; }
+
+        .layout { display: flex; flex: 1; }
+        
+        .main-game { flex: 1; display: flex; flex-direction: column; background: #060b11; padding: 20px; }
+        
+        .game-canvas-container { flex: 1; position: relative; border: 1px solid var(--border-color); border-radius: 8px; background: #0a1118; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        .multiplier-display { position: absolute; font-size: 80px; font-weight: 900; z-index: 10; text-shadow: 0 4px 15px rgba(0,0,0,0.8); font-variant-numeric: tabular-nums; }
+        .multiplier-display.running { color: var(--accent-green); }
+        .multiplier-display.crashed { color: var(--accent-red); }
+        
+        .controls { background: var(--bg-panel); padding: 20px; margin-top: 20px; border-radius: 8px; display: flex; justify-content: center; gap: 20px; border: 1px solid var(--border-color); }
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        .input-group label { font-size: 11px; color: var(--text-muted); font-weight: bold; }
+        .input-group input { background: var(--bg-card); border: 1px solid var(--border-color); color: white; padding: 12px; width: 150px; text-align: center; font-size: 16px; font-weight: bold; border-radius: 4px; outline: none; }
+        
+        .btn-action { padding: 15px 40px; font-size: 20px; font-weight: 900; border: none; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: 0.1s; min-width: 250px; }
+        .btn-bet { background: var(--accent-blue); color: white; }
+        .btn-cashout { background: #ffaa00; color: #000; }
+        .btn-disabled { background: #333; color: #666; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
+        <div class="header-right">
+            <div class="wallet">₹ <span id="balance">10000.00</span></div>
+            <button class="close-btn" onclick="window.location.href='index.html'">HUB</button>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="main-game">
+            <div class="game-canvas-container" id="canvasContainer">
+                <canvas id="crashCanvas"></canvas>
+                <div class="multiplier-display running" id="multDisplay">1.00x</div>
+            </div>
+
+            <div class="controls">
+                <div class="input-group">
+                    <label>BET AMOUNT (₹)</label>
+                    <input type="number" id="betAmount" value="100" min="10">
+                </div>
+                <button class="btn-action btn-bet" id="actionBtn" onclick="handleAction()">BET</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('crashCanvas');
+        const ctx = canvas.getContext('2d');
+        const multDisplay = document.getElementById('multDisplay');
+        const actionBtn = document.getElementById('actionBtn');
+        const balanceDisplay = document.getElementById('balance');
+        const betInput = document.getElementById('betAmount');
+        const container = document.getElementById('canvasContainer');
+
+        let balance = 10000.00;
+        let currentMultiplier = 1.00;
+        let gameState = 'WAITING'; 
+        let betState = 'NONE'; 
+        let currentBet = 0;
+        let animationId;
+        
+        // Canvas Graph Variables
+        let startTime = 0;
+        let points = [];
+
+        function resizeCanvas() {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function drawGraph() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid
+            ctx.strokeStyle = '#1a3148';
+            ctx.lineWidth = 1;
+            for(let i=0; i<canvas.width; i+=50) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke(); }
+            for(let i=0; i<canvas.height; i+=50) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke(); }
+
+            if (points.length < 2) return;
+
+            // Draw line
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            for (let i = 1; i < points.length; i++) {
+                ctx.lineTo(points[i].x, points[i].y);
+            }
+            
+            ctx.strokeStyle = gameState === 'CRASHED' ? '#ff3333' : '#5c9e28';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            // Gradient Fill
+            let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, gameState === 'CRASHED' ? 'rgba(255, 51, 51, 0.2)' : 'rgba(92, 158, 40, 0.2)');
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            
+            ctx.lineTo(points[points.length-1].x, canvas.height);
+            ctx.lineTo(points[0].x, canvas.height);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        }
+
+        function handleAction() {
+            if (gameState === 'WAITING' && betState === 'NONE') {
+                const amount = parseFloat(betInput.value);
+                if(amount > balance) return alert('Insufficient Balance');
+                currentBet = amount;
+                betState = 'QUEUED';
+                actionBtn.className = 'btn-action btn-disabled';
+                actionBtn.innerText = 'WAITING...';
+                balance -= currentBet;
+                balanceDisplay.innerText = balance.toFixed(2);
+            } else if (gameState === 'RUNNING' && betState === 'ACTIVE') {
+                let winnings = currentBet * currentMultiplier;
+                balance += winnings;
+                balanceDisplay.innerText = balance.toFixed(2);
+                betState = 'NONE';
+                actionBtn.className = 'btn-action btn-disabled';
+                actionBtn.innerText = 'CASHED OUT';
+            }
+        }
+
+        function gameLoop(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            if (gameState === 'RUNNING') {
+                currentMultiplier += (currentMultiplier * 0.002) + 0.005;
+                multDisplay.innerText = currentMultiplier.toFixed(2) + 'x';
+                
+                if (betState === 'ACTIVE') {
+                    actionBtn.innerText = `CASHOUT (₹${(currentBet * currentMultiplier).toFixed(2)})`;
+                }
+
+                // Calculate graph point
+                const x = (elapsed / 1000) * 30; // Move right over time
+                const y = canvas.height - (currentMultiplier * 15); // Move up as mult increases
+                
+                points.push({x: Math.min(x, canvas.width), y: Math.max(y, 0)});
+
+                // Random crash logic (Simulated for frontend)
+                if (Math.random() < 0.002 || currentMultiplier > 10.00) {
+                    gameState = 'CRASHED';
+                    multDisplay.className = 'multiplier-display crashed';
+                    if (betState === 'ACTIVE') betState = 'NONE'; // Lost
+                    actionBtn.className = 'btn-action btn-disabled';
+                    actionBtn.innerText = 'CRASHED';
+                    setTimeout(startRound, 3000);
+                }
+            }
+
+            drawGraph();
+            if (gameState !== 'WAITING') animationId = requestAnimationFrame(gameLoop);
+        }
+
+        function startRound() {
+            gameState = 'WAITING';
+            multDisplay.className = 'multiplier-display';
+            multDisplay.innerText = '1.00x';
+            points = [{x: 0, y: canvas.height - 15}];
+            drawGraph();
+
+            if (betState !== 'QUEUED') {
+                actionBtn.className = 'btn-action btn-bet';
+                actionBtn.innerText = 'BET';
+                actionBtn.disabled = false;
+            }
+
+            setTimeout(() => {
+                gameState = 'RUNNING';
+                multDisplay.className = 'multiplier-display running';
+                startTime = 0;
+                points = [{x: 0, y: canvas.height - 15}];
+                currentMultiplier = 1.00;
+
+                if (betState === 'QUEUED') {
+                    betState = 'ACTIVE';
+                    actionBtn.className = 'btn-action btn-cashout';
+                }
+                
+                animationId = requestAnimationFrame(gameLoop);
+            }, 3000);
+        }
+
+        startRound();
+    </script>
+</body>
+</html>

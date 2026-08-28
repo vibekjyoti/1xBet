@@ -1,0 +1,259 @@
+<!-- Save this as baccarat.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1xBet - Baccarat Live</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40;
+            --text-main: #ffffff; --text-muted: #8d9ba8;
+            --accent-blue: #238cf5; --accent-green: #28a745; --accent-red: #e6003d; --accent-yellow: #ffaa00;
+            --border-color: #1a3148;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+        
+        /* Header */
+        header { background: var(--bg-header); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 22px; font-weight: 900; font-style: italic; cursor: pointer; }
+        .logo span { color: var(--accent-blue); }
+        .header-right { display: flex; gap: 15px; align-items: center; }
+        .wallet { background: var(--bg-card); padding: 8px 15px; border-radius: 4px; font-weight: bold; border: 1px solid var(--accent-blue); }
+        .close-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .close-btn:hover { color: white; border-color: white; }
+
+        .layout { display: flex; flex-direction: column; align-items: center; padding: 30px 20px; flex: 1; gap: 20px; }
+
+        /* Game Table */
+        .table { background: radial-gradient(circle, #1d4026 0%, #0d2112 100%); width: 100%; max-width: 900px; height: 350px; border-radius: 120px; border: 10px solid #2a1610; display: flex; flex-direction: column; justify-content: space-between; padding: 30px; box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        
+        .status-toast { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); padding: 10px 20px; border-radius: 20px; font-weight: bold; letter-spacing: 1px; font-size: 14px; color: var(--accent-yellow); z-index: 10; text-align: center; }
+
+        .cards-area { display: flex; justify-content: space-around; width: 100%; align-items: center; flex: 1; }
+        
+        .side { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 40%; }
+        .side-title { font-size: 24px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+        .player-title { color: rgba(35, 140, 245, 0.5); }
+        .banker-title { color: rgba(230, 0, 61, 0.5); }
+        
+        .card-container { display: flex; gap: 10px; height: 120px; min-width: 150px; justify-content: center; }
+        .playing-card { width: 80px; height: 115px; background: white; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: black; font-weight: 900; font-size: 28px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid #ccc; animation: dropIn 0.4s ease-out; }
+        .card-red { color: #e6003d; }
+        .card-black { color: #111; }
+        .card-score { background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 18px; border: 1px solid rgba(255,255,255,0.2); }
+
+        @keyframes dropIn { from { opacity: 0; transform: translateY(-30px) scale(1.1); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        /* Betting Area */
+        .betting-board { display: flex; gap: 15px; width: 100%; max-width: 900px; margin-top: 10px; }
+        .bet-btn { flex: 1; background: var(--bg-panel); border: 2px solid var(--border-color); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .bet-btn:hover { background: var(--bg-hover); transform: translateY(-2px); }
+        .bet-btn.selected { border-color: var(--accent-yellow); box-shadow: 0 0 15px rgba(255,170,0,0.4); }
+        .bet-title { font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; }
+        .bet-payout { font-size: 12px; color: var(--text-muted); font-weight: bold; }
+
+        .btn-player .bet-title { color: var(--accent-blue); }
+        .btn-tie .bet-title { color: var(--accent-green); }
+        .btn-banker .bet-title { color: var(--accent-red); }
+
+        /* Controls */
+        .controls { display: flex; gap: 15px; width: 100%; max-width: 900px; background: var(--bg-panel); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .input-group { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .input-group label { font-size: 11px; color: var(--text-muted); font-weight: bold; text-transform: uppercase; }
+        .input-group input { width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); color: white; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 4px; outline: none; }
+        
+        .btn-deal { flex: 1; background: var(--accent-green); color: white; font-size: 20px; font-weight: 900; border: none; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn-deal:hover:not(:disabled) { background: #1e7e34; }
+        .btn-deal:disabled { background: #333; color: #666; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
+        <div class="header-right">
+            <div class="wallet">₹ <span id="balance">10000.00</span></div>
+            <button class="close-btn" onclick="window.location.href='index.html'">HUB</button>
+        </div>
+    </header>
+
+    <div class="layout">
+        
+        <div class="table">
+            <div class="status-toast" id="statusToast">PLACE YOUR BETS</div>
+            
+            <div class="cards-area">
+                <div class="side">
+                    <div class="side-title player-title">PLAYER</div>
+                    <div class="card-container" id="playerCards"></div>
+                    <div class="card-score" id="playerScore">0</div>
+                </div>
+                
+                <div class="side">
+                    <div class="side-title banker-title">BANKER</div>
+                    <div class="card-container" id="bankerCards"></div>
+                    <div class="card-score" id="bankerScore">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="betting-board">
+            <div class="bet-btn btn-player" onclick="selectBet('PLAYER', 2, this)">
+                <div class="bet-title">PLAYER</div>
+                <div class="bet-payout">PAYS 1:1</div>
+            </div>
+            <div class="bet-btn btn-tie" onclick="selectBet('TIE', 9, this)">
+                <div class="bet-title">TIE</div>
+                <div class="bet-payout">PAYS 8:1</div>
+            </div>
+            <div class="bet-btn btn-banker" onclick="selectBet('BANKER', 1.95, this)">
+                <div class="bet-title">BANKER</div>
+                <div class="bet-payout">PAYS 0.95:1</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label>BET AMOUNT (₹)</label>
+                <input type="number" id="betAmount" value="500" min="50">
+            </div>
+            <button class="btn-deal" id="dealBtn" onclick="dealCards()">DEAL CARDS</button>
+        </div>
+
+    </div>
+
+    <script>
+        const balanceDisplay = document.getElementById('balance');
+        const statusToast = document.getElementById('statusToast');
+        const dealBtn = document.getElementById('dealBtn');
+        const playerCards = document.getElementById('playerCards');
+        const bankerCards = document.getElementById('bankerCards');
+        const playerScoreDisplay = document.getElementById('playerScore');
+        const bankerScoreDisplay = document.getElementById('bankerScore');
+
+        let balance = 10000.00;
+        let isDealing = false;
+        let selectedBet = null;
+        let currentMultiplier = 0;
+
+        const suits = ['♠', '♥', '♦', '♣'];
+        const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+        function getCardValue(valStr) {
+            if (['10', 'J', 'Q', 'K'].includes(valStr)) return 0;
+            if (valStr === 'A') return 1;
+            return parseInt(valStr);
+        }
+
+        function generateCard() {
+            const suit = suits[Math.floor(Math.random() * suits.length)];
+            const val = values[Math.floor(Math.random() * values.length)];
+            const colorClass = (suit === '♥' || suit === '♦') ? 'card-red' : 'card-black';
+            
+            const cardEl = document.createElement('div');
+            cardEl.className = `playing-card ${colorClass}`;
+            cardEl.innerHTML = `<div>${val}</div><div>${suit}</div>`;
+            
+            return { element: cardEl, value: getCardValue(val) };
+        }
+
+        function selectBet(type, multiplier, el) {
+            if (isDealing) return;
+            document.querySelectorAll('.bet-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedBet = type;
+            currentMultiplier = multiplier;
+            statusToast.innerText = `BET SET ON ${type}`;
+        }
+
+        function dealCards() {
+            if (!selectedBet) return alert('Please select Player, Banker, or Tie.');
+            
+            const betAmt = parseFloat(document.getElementById('betAmount').value);
+            if (betAmt > balance) return alert('Insufficient Balance!');
+
+            balance -= betAmt;
+            balanceDisplay.innerText = balance.toFixed(2);
+            
+            isDealing = true;
+            dealBtn.disabled = true;
+            statusToast.innerText = 'NO MORE BETS...';
+            
+            // Clear board
+            playerCards.innerHTML = '';
+            bankerCards.innerHTML = '';
+            playerScoreDisplay.innerText = '0';
+            bankerScoreDisplay.innerText = '0';
+
+            let pTotal = 0;
+            let bTotal = 0;
+
+            // Simplified Mockup Dealing Sequence (2 cards each)
+            setTimeout(() => {
+                const c1 = generateCard();
+                playerCards.appendChild(c1.element);
+                pTotal = (pTotal + c1.value) % 10;
+                playerScoreDisplay.innerText = pTotal;
+            }, 500);
+
+            setTimeout(() => {
+                const c2 = generateCard();
+                bankerCards.appendChild(c2.element);
+                bTotal = (bTotal + c2.value) % 10;
+                bankerScoreDisplay.innerText = bTotal;
+            }, 1000);
+
+            setTimeout(() => {
+                const c3 = generateCard();
+                playerCards.appendChild(c3.element);
+                pTotal = (pTotal + c3.value) % 10;
+                playerScoreDisplay.innerText = pTotal;
+            }, 1500);
+
+            setTimeout(() => {
+                const c4 = generateCard();
+                bankerCards.appendChild(c4.element);
+                bTotal = (bTotal + c4.value) % 10;
+                bankerScoreDisplay.innerText = bTotal;
+                
+                resolveGame(pTotal, bTotal, betAmt);
+            }, 2000);
+        }
+
+        function resolveGame(pTotal, bTotal, betAmt) {
+            let winner = 'TIE';
+            if (pTotal > bTotal) winner = 'PLAYER';
+            if (bTotal > pTotal) winner = 'BANKER';
+
+            setTimeout(() => {
+                if (winner === selectedBet) {
+                    const winnings = betAmt * currentMultiplier;
+                    balance += winnings;
+                    balanceDisplay.innerText = balance.toFixed(2);
+                    statusToast.innerText = `${winner} WINS! YOU WON ₹${winnings.toFixed(2)}`;
+                    statusToast.style.color = 'var(--accent-green)';
+                } else if (winner === 'TIE' && selectedBet !== 'TIE') {
+                    // Push rule for Player/Banker bets on Tie
+                    balance += betAmt;
+                    balanceDisplay.innerText = balance.toFixed(2);
+                    statusToast.innerText = `TIE! BET REFUNDED.`;
+                    statusToast.style.color = 'white';
+                } else {
+                    statusToast.innerText = `${winner} WINS. HOUSE TAKES BET.`;
+                    statusToast.style.color = 'var(--accent-red)';
+                }
+
+                setTimeout(() => {
+                    isDealing = false;
+                    dealBtn.disabled = false;
+                    statusToast.innerText = 'PLACE YOUR BETS';
+                    statusToast.style.color = 'var(--accent-yellow)';
+                }, 3000);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

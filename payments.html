@@ -1,0 +1,232 @@
+<!-- Save this as payments.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1xBet - Cashier & Payments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40;
+            --text-main: #ffffff; --text-muted: #8d9ba8;
+            --accent-blue: #238cf5; --accent-green: #5c9e28;
+            --border-color: #1a3148;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Header */
+        header { background: #0d1a27; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 24px; font-weight: 900; font-style: italic; cursor: pointer; }
+        .logo span { color: var(--accent-blue); }
+        .close-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-weight: bold; }
+        .close-btn:hover { color: white; border-color: white; }
+
+        /* Main Container */
+        .cashier-container { max-width: 1000px; margin: 40px auto; width: 100%; padding: 0 20px; flex: 1; }
+        
+        /* Tabs */
+        .tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 30px; }
+        .tab { padding: 15px 30px; font-size: 16px; font-weight: 700; color: var(--text-muted); cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .tab:hover { color: var(--text-main); }
+        .tab.active { color: var(--text-main); border-bottom: 2px solid var(--accent-green); margin-bottom: -2px; }
+
+        /* Payment Grid */
+        .grid-header { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; }
+        .method-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-bottom: 40px; }
+        
+        .method-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
+        .method-card:hover { border-color: var(--accent-blue); background: var(--bg-card); transform: translateY(-2px); }
+        
+        .method-icon { width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .method-name { font-weight: 600; font-size: 14px; }
+        .method-limits { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+        /* Deposit Form Modal */
+        .form-modal { display: none; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 30px; margin-top: -20px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .form-modal.active { display: block; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
+        .input-group input { width: 100%; padding: 14px; background: var(--bg-card); border: 1px solid var(--border-color); color: white; border-radius: 4px; font-size: 16px; outline: none; transition: 0.2s; }
+        .input-group input:focus { border-color: var(--accent-blue); }
+        
+        .btn-submit { background: var(--accent-green); color: white; border: none; padding: 15px; width: 100%; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn-submit:hover { background: #4e8721; }
+
+        /* Wallet Status */
+        .wallet-status { background: var(--bg-card); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .wallet-balance { font-size: 24px; font-weight: 900; color: var(--accent-green); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
+        <button class="close-btn" onclick="window.location.href='index.html'">BACK TO HUB</button>
+    </header>
+
+    <div class="cashier-container">
+        <div class="wallet-status">
+            <div>
+                <div style="font-size: 12px; color: var(--text-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 5px;">Current Balance</div>
+                <div class="wallet-balance">₹ <span id="displayBalance">10000.00</span></div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 12px; color: var(--text-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 5px;">Account ID</div>
+                <div style="font-size: 16px; font-weight: bold;">#84920174</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('deposit', this)">DEPOSIT</div>
+            <div class="tab" onclick="switchTab('withdraw', this)">WITHDRAWAL</div>
+        </div>
+
+        <div id="content-deposit">
+            
+            <!-- Dynamic Deposit Form -->
+            <div class="form-modal" id="depositForm">
+                <div class="form-header">
+                    <h3 id="formTitle">Deposit via UPI</h3>
+                    <span style="cursor: pointer; color: var(--text-muted); font-size: 24px; font-weight: bold;" onclick="closeForm()">×</span>
+                </div>
+                <div class="input-group">
+                    <label>Amount (INR)</label>
+                    <input type="number" placeholder="Min: 500.00" id="depositAmount">
+                </div>
+                <div class="input-group" id="extraField">
+                    <label>Transaction ID / UTR</label>
+                    <input type="text" placeholder="Enter 12-digit UTR" id="txId">
+                </div>
+                <button class="btn-submit" onclick="submitTransaction()">CONFIRM DEPOSIT</button>
+            </div>
+
+            <div class="grid-header">E-Wallets & UPI</div>
+            <div class="method-grid">
+                <div class="method-card" onclick="openForm('UPI')">
+                    <div class="method-icon">📱</div>
+                    <div><div class="method-name">UPI / BHIM</div><div class="method-limits">Min: ₹500 | Max: ₹50,000</div></div>
+                </div>
+                <div class="method-card" onclick="openForm('PhonePe')">
+                    <div class="method-icon" style="color:#5f259f; font-weight:bold;">Pē</div>
+                    <div><div class="method-name">PhonePe</div><div class="method-limits">Min: ₹300 | Max: ₹50,000</div></div>
+                </div>
+                <div class="method-card" onclick="openForm('Google Pay')">
+                    <div class="method-icon" style="color:#ea4335; font-weight:bold;">G</div>
+                    <div><div class="method-name">Google Pay</div><div class="method-limits">Min: ₹300 | Max: ₹50,000</div></div>
+                </div>
+                <div class="method-card" onclick="openForm('Paytm')">
+                    <div class="method-icon" style="color:#002970; font-weight:bold;">₹</div>
+                    <div><div class="method-name">Paytm Wallet</div><div class="method-limits">Min: ₹300 | Max: ₹20,000</div></div>
+                </div>
+            </div>
+
+            <div class="grid-header">Cryptocurrency</div>
+            <div class="method-grid">
+                <div class="method-card" onclick="openForm('Bitcoin')">
+                    <div class="method-icon" style="background:#f7931a; color:white;">₿</div>
+                    <div><div class="method-name">Bitcoin (BTC)</div><div class="method-limits">Min: 0.001 BTC</div></div>
+                </div>
+                <div class="method-card" onclick="openForm('Tether (TRC20)')">
+                    <div class="method-icon" style="background:#26a17b; color:white;">₮</div>
+                    <div><div class="method-name">Tether on Tron (USDT)</div><div class="method-limits">Min: 5 USDT</div></div>
+                </div>
+                <div class="method-card" onclick="openForm('Ethereum')">
+                    <div class="method-icon" style="background:#627eea; color:white;">Ξ</div>
+                    <div><div class="method-name">Ethereum (ETH)</div><div class="method-limits">Min: 0.01 ETH</div></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="content-withdraw" style="display: none;">
+            <div style="background: var(--bg-panel); padding: 50px; text-align: center; border-radius: 8px; border: 1px dashed var(--border-color); color: var(--text-muted); box-shadow: inset 0 0 20px rgba(0,0,0,0.2);">
+                <div style="font-size: 50px; margin-bottom: 20px; opacity: 0.7;">🛡️</div>
+                <h3 style="color: var(--text-main); margin-bottom: 10px; font-size: 20px;">Identity Verification Required</h3>
+                <p style="font-size: 14px; max-width: 400px; margin: 0 auto; line-height: 1.6;">To ensure the security of your funds, please complete the KYC verification process in your profile settings before making a withdrawal.</p>
+                <button class="btn-submit" style="width: auto; padding: 12px 30px; margin-top: 25px; background: var(--accent-blue);">GO TO PROFILE VERIFICATION</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentBalance = 10000.00;
+        
+        function switchTab(type, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            
+            if (type === 'deposit') {
+                document.getElementById('content-deposit').style.display = 'block';
+                document.getElementById('content-withdraw').style.display = 'none';
+            } else {
+                document.getElementById('content-deposit').style.display = 'none';
+                document.getElementById('content-withdraw').style.display = 'block';
+                closeForm();
+            }
+        }
+
+        function openForm(method) {
+            const form = document.getElementById('depositForm');
+            document.getElementById('formTitle').innerText = `Deposit via ${method}`;
+            
+            // Adjust form fields based on crypto vs fiat
+            const extra = document.getElementById('extraField');
+            if (method === 'Bitcoin' || method === 'Tether (TRC20)' || method === 'Ethereum') {
+                extra.innerHTML = `<label>Your Crypto Wallet Address</label><input type="text" placeholder="Paste your sending wallet address here" id="txId">`;
+                document.getElementById('depositAmount').placeholder = "Enter Crypto Amount";
+            } else {
+                extra.innerHTML = `<label>Transaction ID / UTR</label><input type="text" placeholder="Enter 12-digit UTR" id="txId">`;
+                document.getElementById('depositAmount').placeholder = "Min: 500.00";
+            }
+            
+            form.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function closeForm() {
+            document.getElementById('depositForm').classList.remove('active');
+            document.getElementById('depositAmount').value = '';
+            if (document.getElementById('txId')) document.getElementById('txId').value = '';
+        }
+
+        function submitTransaction() {
+            const amountInput = document.getElementById('depositAmount').value;
+            const txIdInput = document.getElementById('txId').value;
+            const btn = document.querySelector('.form-modal .btn-submit');
+            
+            if (!amountInput || amountInput <= 0) {
+                alert("Please enter a valid deposit amount.");
+                return;
+            }
+            if (!txIdInput) {
+                alert("Please enter your Transaction ID or Wallet Address.");
+                return;
+            }
+
+            btn.innerText = 'PROCESSING TRANSACTION...';
+            btn.style.opacity = '0.7';
+            btn.disabled = true;
+            
+            // Simulate API Call Delay
+            setTimeout(() => {
+                const depositAmount = parseFloat(amountInput);
+                currentBalance += depositAmount;
+                document.getElementById('displayBalance').innerText = currentBalance.toFixed(2);
+                
+                alert(`Success! ₹${depositAmount.toFixed(2)} has been credited to your account.`);
+                
+                closeForm();
+                btn.innerText = 'CONFIRM DEPOSIT';
+                btn.style.opacity = '1';
+                btn.disabled = false;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

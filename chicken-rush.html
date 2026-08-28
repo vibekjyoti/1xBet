@@ -1,0 +1,221 @@
+<!-- Save this as chicken-rush.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1xBet - Chicken Rush (Tower)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40;
+            --text-main: #ffffff; --text-muted: #8d9ba8;
+            --accent-blue: #238cf5; --accent-green: #5c9e28; --accent-red: #ff3333;
+            --border-color: #1a3148;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+        
+        header { background: var(--bg-header); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 22px; font-weight: 900; font-style: italic; cursor: pointer; }
+        .logo span { color: var(--accent-blue); }
+        .header-right { display: flex; gap: 15px; align-items: center; }
+        .wallet { background: var(--bg-card); padding: 8px 15px; border-radius: 4px; font-weight: bold; border: 1px solid var(--accent-blue); }
+        .close-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        
+        .layout { display: flex; flex: 1; padding: 20px; gap: 20px; justify-content: center; }
+        
+        /* Controls */
+        .controls { width: 300px; background: var(--bg-panel); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); height: fit-content; }
+        .input-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px; }
+        .input-group label { font-size: 11px; color: var(--text-muted); font-weight: bold; }
+        .input-group input { background: var(--bg-card); border: 1px solid var(--border-color); color: white; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 4px; outline: none; }
+        
+        .btn-action { width: 100%; padding: 15px; font-size: 18px; font-weight: 900; border: none; border-radius: 4px; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+        .btn-bet { background: var(--accent-green); color: white; }
+        .btn-cashout { background: #ffaa00; color: #000; display: none; }
+        
+        /* Tower Grid */
+        .tower-container { background: var(--bg-panel); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column-reverse; gap: 10px; }
+        .tower-row { display: flex; gap: 10px; opacity: 0.4; pointer-events: none; transition: 0.2s; align-items: center; }
+        .tower-row.active { opacity: 1; pointer-events: auto; }
+        .tower-row.completed { opacity: 0.8; pointer-events: none; }
+        
+        .tile { width: 60px; height: 60px; background: var(--bg-card); border-radius: 8px; border: 2px solid var(--border-color); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 24px; transition: 0.2s; }
+        .tile:hover { border-color: var(--accent-blue); background: var(--bg-hover); }
+        .tile.safe { background: rgba(92, 158, 40, 0.2); border-color: var(--accent-green); }
+        .tile.bomb { background: rgba(255, 51, 51, 0.2); border-color: var(--accent-red); }
+        
+        .row-mult { font-weight: bold; color: var(--text-muted); width: 50px; text-align: right; }
+        .tower-row.active .row-mult { color: var(--accent-blue); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
+        <div class="header-right">
+            <div class="wallet">₹ <span id="balance">10000.00</span></div>
+            <button class="close-btn" onclick="window.location.href='index.html'">HUB</button>
+        </div>
+    </header>
+
+    <div class="layout">
+        <div class="controls">
+            <div class="input-group">
+                <label>BET AMOUNT (₹)</label>
+                <input type="number" id="betAmount" value="100" min="10">
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold;">
+                <span style="color: var(--text-muted);">Potential Win:</span>
+                <span id="potentialWin" style="color: var(--accent-green);">₹0.00</span>
+            </div>
+            <button class="btn-action btn-bet" id="btnBet" onclick="startGame()">BET</button>
+            <button class="btn-action btn-cashout" id="btnCashout" onclick="cashout()">CASHOUT</button>
+        </div>
+
+        <div class="tower-container" id="towerGrid">
+            <!-- Generated by JS -->
+        </div>
+    </div>
+
+    <script>
+        const grid = document.getElementById('towerGrid');
+        const balanceDisplay = document.getElementById('balance');
+        const btnBet = document.getElementById('btnBet');
+        const btnCashout = document.getElementById('btnCashout');
+        const potentialWinDisplay = document.getElementById('potentialWin');
+        
+        let balance = 10000.00;
+        let currentBet = 0;
+        let currentRow = 0;
+        let isPlaying = false;
+        
+        // Multipliers moving up the tower (8 rows)
+        const multipliers = [1.2, 1.5, 1.9, 2.4, 3.1, 4.0, 5.2, 7.0];
+
+        function createGrid() {
+            grid.innerHTML = '';
+            for (let r = 0; r < 8; r++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'tower-row';
+                rowDiv.id = `row-${r}`;
+                
+                for (let c = 0; c < 5; c++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    tile.onclick = () => selectTile(r, tile);
+                    rowDiv.appendChild(tile);
+                }
+                
+                const multDiv = document.createElement('div');
+                multDiv.className = 'row-mult';
+                multDiv.innerText = multipliers[r].toFixed(2) + 'x';
+                rowDiv.appendChild(multDiv);
+                
+                grid.appendChild(rowDiv);
+            }
+        }
+
+        function startGame() {
+            const betInput = parseFloat(document.getElementById('betAmount').value);
+            if(betInput > balance) return alert('Insufficient balance!');
+            
+            currentBet = betInput;
+            balance -= currentBet;
+            updateBalance();
+            
+            isPlaying = true;
+            currentRow = 0;
+            createGrid();
+            
+            document.getElementById('row-0').classList.add('active');
+            btnBet.style.display = 'none';
+            btnCashout.style.display = 'block';
+            updateWinDisplay();
+        }
+
+        function selectTile(rowIndex, tileElement) {
+            if (!isPlaying || rowIndex !== currentRow) return;
+
+            // Simple RNG: 1 in 5 chance of hitting a bomb
+            const hitBomb = Math.random() < 0.2;
+
+            if (hitBomb) {
+                tileElement.classList.add('bomb');
+                tileElement.innerText = '💀';
+                loseGame();
+            } else {
+                tileElement.classList.add('safe');
+                tileElement.innerText = '🍗';
+                
+                const rowElement = document.getElementById(`row-${currentRow}`);
+                rowElement.classList.remove('active');
+                rowElement.classList.add('completed');
+                
+                currentRow++;
+                updateWinDisplay();
+
+                if (currentRow >= 8) {
+                    cashout(); // Reached top
+                } else {
+                    document.getElementById(`row-${currentRow}`).classList.add('active');
+                }
+            }
+        }
+
+        function loseGame() {
+            isPlaying = false;
+            btnBet.style.display = 'block';
+            btnCashout.style.display = 'none';
+            potentialWinDisplay.innerText = '₹0.00';
+            potentialWinDisplay.style.color = 'var(--text-muted)';
+            
+            // Show bombs on current row
+            const tiles = document.getElementById(`row-${currentRow}`).querySelectorAll('.tile');
+            tiles.forEach(t => {
+                if(!t.classList.contains('bomb') && !t.classList.contains('safe')) {
+                    t.innerText = Math.random() < 0.2 ? '💀' : '🍗';
+                    t.style.opacity = '0.5';
+                }
+            });
+        }
+
+        function cashout() {
+            if(!isPlaying || currentRow === 0) return;
+            
+            const mult = multipliers[currentRow - 1];
+            const winnings = currentBet * mult;
+            
+            balance += winnings;
+            updateBalance();
+            
+            alert(`You cashed out and won ₹${winnings.toFixed(2)}!`);
+            
+            isPlaying = false;
+            btnBet.style.display = 'block';
+            btnCashout.style.display = 'none';
+            document.querySelectorAll('.tower-row').forEach(r => {
+                r.classList.remove('active');
+                r.classList.remove('completed');
+            });
+        }
+
+        function updateWinDisplay() {
+            if(currentRow === 0) {
+                btnCashout.innerText = 'CASHOUT';
+                potentialWinDisplay.innerText = '₹0.00';
+            } else {
+                const win = (currentBet * multipliers[currentRow - 1]).toFixed(2);
+                btnCashout.innerText = `CASHOUT (₹${win})`;
+                potentialWinDisplay.innerText = `₹${win}`;
+                potentialWinDisplay.style.color = 'var(--accent-green)';
+            }
+        }
+
+        function updateBalance() { balanceDisplay.innerText = balance.toFixed(2); }
+
+        createGrid();
+    </script>
+</body>
+</html>

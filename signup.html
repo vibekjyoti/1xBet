@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1xBet - Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40;
+            --text-main: #ffffff; --text-muted: #8d9ba8;
+            --accent-green: #5c9e28; --accent-green-hover: #4e8721;
+            --border-color: #1a3148;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        
+        body {
+            background: linear-gradient(135deg, var(--bg-base) 0%, #060b11 100%);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: var(--bg-panel);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .logo-header { text-align: center; margin-bottom: 25px; cursor: pointer; }
+        .logo { font-size: 28px; font-weight: 900; font-style: italic; letter-spacing: -0.5px; }
+        .logo span { color: #238cf5; }
+
+        .auth-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; text-align: center; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-green); }
+
+        /* Registration Tabs */
+        .reg-tabs { display: flex; margin-bottom: 25px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); }
+        .tab { flex: 1; padding: 12px; text-align: center; font-size: 12px; font-weight: 600; cursor: pointer; background: var(--bg-card); color: var(--text-muted); transition: 0.2s; }
+        .tab.active { background: var(--accent-green); color: white; }
+
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; font-weight: 600; }
+        .input-group input, .input-group select { 
+            width: 100%; padding: 14px; background: var(--bg-card); 
+            border: 1px solid var(--border-color); color: white; 
+            border-radius: 6px; font-size: 14px; outline: none; transition: 0.2s;
+        }
+        .input-group input:focus, .input-group select:focus { border-color: var(--accent-green); box-shadow: 0 0 0 3px rgba(92, 158, 40, 0.1); }
+
+        .phone-input { display: flex; gap: 10px; }
+        .phone-input select { width: 100px; }
+
+        .btn-submit { 
+            width: 100%; padding: 15px; background: var(--accent-green); 
+            color: white; font-size: 14px; font-weight: 700; border: none; 
+            border-radius: 6px; cursor: pointer; text-transform: uppercase; transition: 0.2s; margin-top: 10px;
+        }
+        .btn-submit:hover { background: var(--accent-green-hover); transform: translateY(-1px); }
+
+        .auth-footer { margin-top: 25px; text-align: center; font-size: 12px; color: var(--text-muted); }
+        .auth-footer a { color: var(--text-main); font-weight: 600; text-decoration: none; margin-left: 5px; }
+        .auth-footer a:hover { color: var(--accent-green); }
+
+        /* Hide elements by default */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="logo-header" onclick="window.location.href='index.html'">
+            <div class="logo">1X<span>BET</span></div>
+        </div>
+        
+        <div class="auth-title">Registration</div>
+
+        <div class="reg-tabs">
+            <div class="tab active" onclick="switchTab('phone')">BY PHONE</div>
+            <div class="tab" onclick="switchTab('email')">BY EMAIL</div>
+        </div>
+
+        <form id="signupForm">
+            <!-- Phone Registration Content -->
+            <div id="content-phone" class="tab-content active">
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <div class="phone-input">
+                        <select>
+                            <option value="+91">+91 (IN)</option>
+                            <option value="+1">+1 (US)</option>
+                            <option value="+44">+44 (UK)</option>
+                        </select>
+                        <input type="tel" placeholder="00000 00000" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Registration Content -->
+            <div id="content-email" class="tab-content">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="Enter your email">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Create a password">
+                </div>
+            </div>
+
+            <!-- Shared Inputs -->
+            <div class="input-group">
+                <label>Currency</label>
+                <select>
+                    <option value="INR">INR (Indian Rupee)</option>
+                    <option value="USD">USD (US Dollar)</option>
+                    <option value="EUR">EUR (Euro)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Promo Code (Optional)</label>
+                <input type="text" placeholder="Enter promo code">
+            </div>
+
+            <button type="submit" class="btn-submit">Register</button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a href="login.html">Log In</a>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(type) {
+            // Update Tab UI
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update Content
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('content-' + type).classList.add('active');
+
+            // Toggle required attributes based on active tab so HTML5 validation works correctly
+            if (type === 'phone') {
+                document.querySelector('input[type="tel"]').required = true;
+                document.querySelector('input[type="email"]').required = false;
+                document.querySelector('input[type="password"]').required = false;
+            } else {
+                document.querySelector('input[type="tel"]').required = false;
+                document.querySelector('input[type="email"]').required = true;
+                document.querySelector('input[type="password"]').required = true;
+            }
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.querySelector('.btn-submit');
+            btn.innerHTML = 'Creating Account...';
+            btn.style.opacity = '0.8';
+            
+            setTimeout(() => {
+                alert("Registration Successful! ₹10,000 Bonus Applied.");
+                window.location.href = 'index.html';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

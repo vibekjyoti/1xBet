@@ -1,0 +1,180 @@
+<!-- Save this as wheel.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1xBet - Lucky Wheel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40;
+            --text-main: #ffffff; --text-muted: #8d9ba8;
+            --accent-blue: #238cf5; --accent-green: #5c9e28; --accent-red: #ff3333; --accent-yellow: #ffaa00;
+            --border-color: #1a3148;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+        
+        /* Header */
+        header { background: var(--bg-header); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 22px; font-weight: 900; font-style: italic; cursor: pointer; }
+        .logo span { color: var(--accent-blue); }
+        .header-right { display: flex; gap: 15px; align-items: center; }
+        .wallet { background: var(--bg-card); padding: 8px 15px; border-radius: 4px; font-weight: bold; border: 1px solid var(--accent-blue); }
+        .close-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .close-btn:hover { color: white; border-color: white; }
+        
+        .layout { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, #112030 0%, #0b1520 100%); padding: 20px; }
+        
+        /* Wheel Container */
+        .wheel-container { position: relative; width: 380px; height: 380px; margin-bottom: 40px; }
+        .wheel-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 40px solid #ffffff; z-index: 10; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5)); }
+        
+        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 8px solid var(--bg-card); box-shadow: 0 0 30px rgba(0,0,0,0.8); transition: transform 4s cubic-bezier(0.15, 0.85, 0.25, 1); background: conic-gradient(
+            var(--accent-blue) 0deg 45deg, 
+            var(--bg-card) 45deg 90deg, 
+            var(--accent-green) 90deg 135deg, 
+            var(--bg-card) 135deg 180deg, 
+            var(--accent-red) 180deg 225deg, 
+            var(--bg-card) 225deg 270deg,
+            var(--accent-yellow) 270deg 315deg,
+            var(--bg-card) 315deg 360deg
+        ); position: relative; overflow: hidden; }
+        
+        /* Wheel Labels */
+        .wheel-label { position: absolute; width: 100%; height: 100%; text-align: center; font-weight: 900; font-size: 26px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .label-1 { transform: rotate(22.5deg); padding-top: 15px; }
+        .label-2 { transform: rotate(67.5deg); padding-top: 15px; color: var(--text-muted); }
+        .label-3 { transform: rotate(112.5deg); padding-top: 15px; }
+        .label-4 { transform: rotate(157.5deg); padding-top: 15px; color: var(--text-muted); }
+        .label-5 { transform: rotate(202.5deg); padding-top: 15px; }
+        .label-6 { transform: rotate(247.5deg); padding-top: 15px; color: var(--text-muted); }
+        .label-7 { transform: rotate(292.5deg); padding-top: 15px; }
+        .label-8 { transform: rotate(337.5deg); padding-top: 15px; color: var(--text-muted); }
+
+        /* Controls */
+        .controls { background: var(--bg-panel); padding: 20px; border-radius: 8px; display: flex; justify-content: center; gap: 20px; border: 1px solid var(--border-color); width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .input-group { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .input-group label { font-size: 11px; color: var(--text-muted); font-weight: bold; text-transform: uppercase; }
+        .input-group input { background: var(--bg-card); border: 1px solid var(--border-color); color: white; padding: 15px; text-align: center; font-size: 18px; font-weight: bold; border-radius: 4px; outline: none; }
+        
+        .btn-spin { padding: 15px; font-size: 20px; font-weight: 900; border: none; border-radius: 4px; cursor: pointer; text-transform: uppercase; flex: 1; background: var(--accent-green); color: white; transition: 0.2s; }
+        .btn-spin:hover:not(:disabled) { background: #4e8721; }
+        .btn-spin:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+        .result-toast { position: absolute; top: 120px; padding: 15px 30px; background: rgba(0,0,0,0.9); border-radius: 8px; font-size: 24px; font-weight: bold; opacity: 0; transition: 0.3s; pointer-events: none; border: 2px solid transparent; z-index: 20; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
+        <div class="header-right">
+            <div class="wallet">₹ <span id="balance">10000.00</span></div>
+            <button class="close-btn" onclick="window.location.href='index.html'">HUB</button>
+        </div>
+    </header>
+
+    <div class="layout">
+        
+        <div class="result-toast" id="resultToast">You won ₹0.00!</div>
+
+        <div class="wheel-container">
+            <div class="wheel-pointer"></div>
+            <div class="wheel" id="wheel">
+                <div class="wheel-label label-1">2x</div>
+                <div class="wheel-label label-2">0x</div>
+                <div class="wheel-label label-3">3x</div>
+                <div class="wheel-label label-4">0x</div>
+                <div class="wheel-label label-5">5x</div>
+                <div class="wheel-label label-6">0x</div>
+                <div class="wheel-label label-7">10x</div>
+                <div class="wheel-label label-8">0x</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label>BET AMOUNT (₹)</label>
+                <input type="number" id="betAmount" value="100" min="10">
+            </div>
+            <button class="btn-spin" id="spinBtn" onclick="spinWheel()">SPIN WHEEL</button>
+        </div>
+    </div>
+
+    <script>
+        const wheel = document.getElementById('wheel');
+        const spinBtn = document.getElementById('spinBtn');
+        const balanceDisplay = document.getElementById('balance');
+        const betInput = document.getElementById('betAmount');
+        const resultToast = document.getElementById('resultToast');
+
+        let balance = 10000.00;
+        let currentRotation = 0;
+        let isSpinning = false;
+
+        // Sector mapping (45 degrees per sector)
+        // Order mapped backwards because the wheel spins clockwise while degrees go counter-clockwise mathematically relative to the pointer at 0deg
+        const sectors = [
+            { mult: 0, color: 'var(--text-muted)' },     // 315-360 deg
+            { mult: 10, color: 'var(--accent-yellow)' }, // 270-315 deg
+            { mult: 0, color: 'var(--text-muted)' },     // 225-270 deg
+            { mult: 5, color: 'var(--accent-red)' },     // 180-225 deg
+            { mult: 0, color: 'var(--text-muted)' },     // 135-180 deg
+            { mult: 3, color: 'var(--accent-green)' },   // 90-135 deg
+            { mult: 0, color: 'var(--text-muted)' },     // 45-90 deg
+            { mult: 2, color: 'var(--accent-blue)' }     // 0-45 deg
+        ];
+
+        function spinWheel() {
+            if (isSpinning) return;
+            
+            const bet = parseFloat(betInput.value);
+            if (bet > balance) return alert('Insufficient Balance!');
+
+            // Deduct Bet
+            balance -= bet;
+            balanceDisplay.innerText = balance.toFixed(2);
+            isSpinning = true;
+            spinBtn.disabled = true;
+            spinBtn.innerText = 'SPINNING...';
+            resultToast.style.opacity = '0';
+
+            // Random extra rotation (between 6 and 10 full spins + random stopping degree)
+            const randomDegrees = Math.floor(Math.random() * 360);
+            const totalRotation = currentRotation + (360 * 8) + randomDegrees;
+            
+            currentRotation = totalRotation;
+            wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+            // Wait for CSS transition to finish
+            setTimeout(() => {
+                const finalDegree = (360 - (currentRotation % 360)) % 360;
+                const sectorIndex = Math.floor(finalDegree / 45);
+                const result = sectors[sectorIndex];
+                
+                const winnings = bet * result.mult;
+                balance += winnings;
+                balanceDisplay.innerText = balance.toFixed(2);
+
+                if (result.mult > 0) {
+                    resultToast.innerText = `You won ₹${winnings.toFixed(2)}!`;
+                    resultToast.style.color = result.color;
+                    resultToast.style.borderColor = result.color;
+                } else {
+                    resultToast.innerText = 'You lost your bet.';
+                    resultToast.style.color = 'var(--text-muted)';
+                    resultToast.style.borderColor = 'var(--border-color)';
+                }
+                
+                resultToast.style.opacity = '1';
+
+                isSpinning = false;
+                spinBtn.disabled = false;
+                spinBtn.innerText = 'SPIN WHEEL';
+            }, 4000); // Matches the 4s cubic-bezier transition duration in CSS
+        }
+    </script>
+</body>
+</html>
