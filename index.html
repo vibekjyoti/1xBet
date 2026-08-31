@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1xBet Dashboard - Main Hub</title>
+    <title>1xBet Dashboard - Enterprise Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
             --text-main: #ffffff; --text-muted: #8d9ba8; --text-dark: #a1b1c2;
             --accent-blue: #238cf5; --accent-blue-hover: #1a7ae0;
             --accent-green: #5c9e28; --accent-green-hover: #4e8721;
-            --border-color: #1a3148; --red-live: #ff3333;
+            --accent-yellow: #ffaa00; --border-color: #1a3148; --red-live: #ff3333;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
         body { background-color: var(--bg-base); color: var(--text-main); font-size: 13px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
@@ -26,28 +26,9 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
         /* Animations */
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 0 0 rgba(35, 140, 245, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(35, 140, 245, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(35, 140, 245, 0); }
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(-15deg); }
-            50% { transform: translateY(-10px) rotate(-12deg); }
-            100% { transform: translateY(0px) rotate(-15deg); }
-        }
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(35, 140, 245, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(35, 140, 245, 0); } 100% { box-shadow: 0 0 0 0 rgba(35, 140, 245, 0); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
         /* Header */
         header { background-color: var(--bg-header); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; min-height: 60px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
@@ -56,107 +37,103 @@
         .logo:hover { transform: scale(1.05); }
         .logo span { color: var(--accent-blue); }
         .nav-links { display: flex; gap: 20px; list-style: none; }
-        .nav-links li { font-weight: 600; font-size: 12px; cursor: pointer; text-transform: uppercase; color: var(--text-dark); transition: color 0.2s, transform 0.2s; position: relative; }
-        .nav-links li:hover, .nav-links li.active { color: var(--text-main); transform: translateY(-1px); }
-        .nav-links li::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--accent-blue); transition: width 0.3s; }
+        .nav-links li { font-weight: 600; font-size: 12px; cursor: pointer; text-transform: uppercase; color: var(--text-dark); transition: 0.2s; position: relative; }
+        .nav-links li:hover, .nav-links li.active { color: var(--text-main); }
+        .nav-links li::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--accent-blue); transition: 0.3s; }
         .nav-links li:hover::after, .nav-links li.active::after { width: 100%; }
 
         /* Buttons */
-        .btn { padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; font-size: 12px; text-transform: uppercase; transition: all 0.2s; }
+        .btn { padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; font-size: 12px; text-transform: uppercase; transition: 0.2s; }
         .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-main); }
         .btn-solid-green { background: var(--accent-green); color: white; animation: pulseGlow 2s infinite; }
         .btn-solid-green:hover { background: var(--accent-green-hover); transform: translateY(-2px); }
-        .btn-solid-blue { background: var(--accent-blue); color: white; }
-        .btn-solid-blue:hover { background: var(--accent-blue-hover); transform: translateY(-2px); }
         
-        /* Live Ticker */
-        .ticker-wrap { background: #081119; border-bottom: 1px solid var(--border-color); height: 30px; overflow: hidden; display: flex; align-items: center; }
-        .ticker-content { display: flex; white-space: nowrap; animation: marquee 30s linear infinite; font-size: 11px; font-weight: 600; color: var(--accent-green); }
-        .ticker-item { margin-right: 50px; }
-
         /* Layout Grid */
-        .layout-container { display: grid; grid-template-columns: 240px minmax(0, 1fr) 300px; gap: 15px; padding: 15px; flex-grow: 1; height: calc(100vh - 90px); }
+        .layout-container { display: grid; grid-template-columns: 240px minmax(0, 1fr) 300px; gap: 15px; padding: 15px; flex-grow: 1; }
         .sidebar { overflow-y: auto; padding-right: 5px; }
         
         .menu-section { background-color: var(--bg-panel); border-radius: 6px; margin-bottom: 10px; overflow: hidden; border: 1px solid transparent; transition: 0.3s; }
-        .menu-section:hover { border-color: var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .menu-header { padding: 12px 15px; background-color: var(--bg-card); font-weight: 600; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
-        .menu-header:hover { background-color: var(--bg-hover); }
+        .menu-header { padding: 12px 15px; background-color: var(--bg-card); font-weight: 600; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .menu-list { list-style: none; }
-        .menu-list li { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: all 0.2s; font-size: 13px; }
-        .menu-list li:hover { background-color: var(--bg-hover); padding-left: 20px; color: var(--accent-blue); }
-        .menu-list li:last-child { border-bottom: none; }
+        .menu-list li { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; font-size: 13px; }
+        .menu-list li:hover, .menu-list li.active { background-color: var(--bg-hover); padding-left: 20px; color: var(--accent-blue); }
         .count { color: var(--text-muted); font-size: 11px; }
 
         /* Main Center Content */
         .main-content { overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding-right: 5px; }
         .hero-banner { background: linear-gradient(135deg, #0f2c4d 0%, #06111d 100%); border-radius: 8px; padding: 35px; position: relative; overflow: hidden; border: 1px solid var(--border-color); min-height: 220px; display: flex; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .hero-text { position: relative; z-index: 2; max-width: 50%; }
-        .hero-text h1 { font-size: 20px; margin-bottom: 5px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .hero-text h2 { font-size: 36px; color: var(--accent-blue); margin-bottom: 15px; font-weight: 800; line-height: 1.1; text-shadow: 0 2px 10px rgba(35,140,245,0.3); }
-        .hero-graphic { position: absolute; right: 20px; top: -40px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(35,140,245,0.2) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: pulseGlow 4s infinite alternate; }
-        .hero-graphic::after { content: "1XBET"; font-size: 40px; font-weight: 900; color: rgba(255,255,255,0.08); transform: rotate(-15deg); letter-spacing: 5px; animation: float 6s ease-in-out infinite; }
+        .hero-text h1 { font-size: 20px; margin-bottom: 5px; font-weight: 700; }
+        .hero-text h2 { font-size: 36px; color: var(--accent-blue); margin-bottom: 15px; font-weight: 800; line-height: 1.1; }
+        
+        .promo-banner { background: linear-gradient(45deg, #510a12, #a51829); padding: 15px 25px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid #ff3366; }
+        .promo-banner:hover { box-shadow: 0 0 20px rgba(230,0,61,0.4); }
         
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; margin-top: 10px; }
         .section-title { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
         .live-dot { width: 8px; height: 8px; background: var(--red-live); border-radius: 50%; display: inline-block; box-shadow: 0 0 8px var(--red-live); animation: blink 1.5s infinite; }
-        .view-all { color: var(--accent-blue); font-size: 12px; cursor: pointer; text-decoration: none; transition: 0.2s; }
+        .view-all { color: var(--accent-blue); font-size: 12px; cursor: pointer; text-decoration: none; }
         .view-all:hover { text-decoration: underline; color: white; }
-        
-        /* Matches List Styles */
-        .bet-list-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 10px; }
-        .bet-list-group { display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+        /* Sports Lists */
+        .bet-list-group { display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 15px; }
         .league-header { background: var(--bg-hover); padding: 10px 15px; border-radius: 6px 6px 0 0; font-size: 12px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border-color); border-bottom: none; cursor: pointer; }
-        .match-row { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 15px; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; border-radius: 0 0 6px 6px; }
+        .match-row { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 15px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; border-radius: 0 0 6px 6px; border-bottom: none; }
+        .match-row:last-child { border-bottom: 1px solid var(--border-color); }
         .match-row:hover { background: #15273a; }
         .match-info-col { display: flex; flex-direction: column; gap: 8px; flex: 1; }
         .team-line { display: flex; justify-content: space-between; align-items: center; padding-right: 30px; }
-        .team-name { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; color: var(--text-main); cursor: pointer; }
+        .team-name { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; cursor: pointer; }
         .team-name:hover { color: var(--accent-blue); text-decoration: underline; }
-        .team-score { font-weight: 700; color: var(--accent-green); font-size: 12px; font-variant-numeric: tabular-nums; }
+        .team-score { font-weight: 700; color: var(--accent-green); font-size: 12px; }
         .team-score.inactive { color: var(--text-main); }
         .match-status { display: flex; gap: 10px; font-size: 11px; color: var(--text-muted); margin-top: 4px; align-items: center; }
-        .live-badge { background: var(--accent-red); color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 9px; text-transform: uppercase; }
+        .live-badge { background: var(--accent-red); color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 9px; }
         
         .odds-col { display: flex; gap: 6px; align-items: center; }
         .odd-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 12px; min-width: 60px; text-align: center; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: 0.2s; }
         .odd-box:hover:not(.locked) { border-color: var(--accent-blue); background: rgba(35, 140, 245, 0.1); transform: translateY(-2px); }
-        .odd-box.locked { opacity: 0.5; cursor: not-allowed; }
         .odd-label { font-size: 10px; color: var(--text-muted); font-weight: 600; }
         .odd-val { font-size: 13px; font-weight: 800; color: var(--accent-blue); }
-        .odd-val.disabled { color: var(--text-muted); font-weight: 500; }
-        .more-markets { background: transparent; color: var(--text-main); font-weight: 700; font-size: 12px; padding: 8px; cursor: pointer; border-radius: 4px; transition: 0.2s; min-width: 45px; text-align: center; border: 1px solid transparent; }
+        .more-markets { color: var(--text-main); font-weight: 700; font-size: 12px; padding: 8px; cursor: pointer; border-radius: 4px; transition: 0.2s; border: 1px solid transparent; }
         .more-markets:hover { background: var(--bg-hover); border-color: var(--border-color); }
 
         /* Game Grids */
-        .games-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 10px;}
-        .game-thumb { aspect-ratio: 4/3; border-radius: 6px; display: flex; align-items: flex-end; padding: 12px; font-weight: 700; font-size: 13px; cursor: pointer; position: relative; overflow: hidden; box-shadow: inset 0 -40px 40px -10px rgba(0,0,0,0.9); border: 1px solid var(--border-color); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .games-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px;}
+        .game-thumb { aspect-ratio: 4/3; border-radius: 6px; display: flex; align-items: flex-end; padding: 12px; font-weight: 700; font-size: 13px; cursor: pointer; position: relative; overflow: hidden; box-shadow: inset 0 -40px 40px -10px rgba(0,0,0,0.9); border: 1px solid var(--border-color); transition: 0.3s; }
         .game-thumb:hover { transform: translateY(-6px) scale(1.03); border-color: var(--text-main); box-shadow: inset 0 -40px 40px -10px rgba(0,0,0,0.9), 0 10px 20px rgba(0,0,0,0.5); z-index: 2; }
-        .game-thumb::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); transform: skewX(-25deg); transition: 0.5s; }
-        .game-thumb:hover::before { left: 200%; }
         
         .bg-crash { background: linear-gradient(45deg, #1a1543, #4a1c6a); }
         .bg-aviator { background: linear-gradient(45deg, #510a12, #a51829); }
         .bg-mines { background: linear-gradient(45deg, #093c6b, #1579d6); }
-        .bg-tower { background: linear-gradient(45deg, #320d5c, #6c1cb5); }
+        .bg-slots { background: linear-gradient(45deg, #7a2020, #d69800); }
         .bg-wheel { background: linear-gradient(45deg, #7c4d00, #d69800); }
-        .bg-bj { background: linear-gradient(135deg, #0f2b15, #1d5229); }
+        .bg-matka { background: linear-gradient(135deg, #0f2b15, #1d5229); }
         .bg-roul { background: linear-gradient(135deg, #2b0f0f, #521d1d); }
         .bg-bac { background: linear-gradient(135deg, #2b1d0f, #52381d); }
 
         /* Right Sidebar Tabs */
         .tabs { display: flex; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); }
-        .tab { flex: 1; text-align: center; padding: 12px 5px; cursor: pointer; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-dark); transition: 0.2s; }
-        .tab:hover { color: var(--text-main); background: rgba(255,255,255,0.02); }
-        .tab.active { color: var(--text-main); border-bottom: 2px solid var(--accent-blue); }
-        .btn-full { width: 100%; padding: 12px; font-size: 12px; }
+        .tab { flex: 1; text-align: center; padding: 12px 5px; cursor: pointer; font-size: 11px; font-weight: 600; color: var(--text-dark); border-bottom: 2px solid transparent; }
+        .tab.active { color: var(--text-main); border-bottom-color: var(--accent-blue); }
+        .btn-full { width: 100%; padding: 12px; font-size: 12px; background: var(--accent-blue); color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .btn-full:hover { background: var(--accent-blue-hover); }
 
-        /* Live Activity Feed */
-        .activity-feed { margin-top: 20px; background: var(--bg-panel); border-radius: 6px; border: 1px solid var(--border-color); overflow: hidden; }
-        .feed-header { padding: 10px 15px; background: var(--bg-card); font-size: 11px; font-weight: bold; color: var(--text-muted); border-bottom: 1px solid var(--border-color); }
-        .feed-items { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .feed-item { font-size: 11px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px; border-left: 2px solid var(--accent-blue); animation: slideInRight 0.3s ease-out; }
+        /* Legitimacy Footer */
+        footer { background: #060b11; border-top: 1px solid var(--border-color); padding: 40px 20px; margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; max-width: 1400px; margin: 0 auto; }
+        .footer-col h4 { color: white; font-size: 14px; margin-bottom: 15px; text-transform: uppercase; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { color: var(--text-muted); font-size: 12px; margin-bottom: 10px; cursor: pointer; }
+        .footer-col ul li:hover { color: var(--accent-blue); text-decoration: underline; }
+        .trust-badges { display: flex; gap: 15px; margin-top: 20px; align-items: center; opacity: 0.6; }
+        .trust-badges span { font-size: 24px; font-weight: 900; border: 1px solid; padding: 4px 8px; border-radius: 4px; }
+        .copyright { text-align: center; color: var(--text-muted); font-size: 11px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color); }
+
+        /* Floating Chat Widget */
+        .live-chat { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: var(--accent-blue); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 1000; transition: 0.2s; }
+        .live-chat:hover { transform: scale(1.1); background: var(--accent-blue-hover); }
     </style>
 </head>
 <body>
@@ -164,36 +141,20 @@
     <header>
         <div class="header-left">
             <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
-            <span class="badge-app" style="background:#5c9e28;">NEW APP</span>
-            <div style="width: 1px; height: 20px; background: var(--border-color); margin: 0 10px;"></div>
             <ul class="nav-links">
-                <li class="active">SPORTS ▾</li>
-                <li onclick="window.location.href='index.html'">LIVE ▾</li>
-                <li onclick="window.location.href='all-games.html'">1XGAMES ▾</li>
-                <li onclick="window.location.href='all-games.html'">CASINO ▾</li>
+                <li class="active">SPORTS</li>
+                <li onclick="window.location.href='index.html'">LIVE</li>
+                <li onclick="window.location.href='all-games.html'">CASINO</li>
+                <li onclick="window.location.href='all-games.html'">1XGAMES</li>
                 <li style="color: var(--accent-green);" onclick="window.location.href='payments.html'">PAYMENTS</li>
             </ul>
         </div>
         <div class="header-right">
             <button class="btn btn-outline" onclick="window.location.href='login.html'">LOG IN</button>
             <button class="btn btn-solid-green" onclick="window.location.href='signup.html'">REGISTRATION</button>
-            <span style="cursor: pointer; color: var(--text-dark); font-size: 16px; transition: 0.2s;" onmouseover="this.style.transform='rotate(90deg)'" onmouseout="this.style.transform='none'">⚙️</span>
-            <!-- Live Clock element integrated here -->
-            <span id="live-clock" style="font-size: 12px; font-weight: 600; color: var(--accent-blue); min-width: 120px; text-align: right; font-variant-numeric: tabular-nums;">🕒 Loading... ▾</span>
-            <span style="font-size: 12px; font-weight: 500; cursor: pointer; transition: 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-main)'">🇬🇧 EN ▾</span>
+            <span id="live-clock" style="font-size: 12px; font-weight: 600; color: var(--accent-blue); min-width: 100px; text-align: right; font-variant-numeric: tabular-nums;">🕒 Loading...</span>
         </div>
     </header>
-
-    <!-- Scrolling Ticker -->
-    <div class="ticker-wrap">
-        <div class="ticker-content" id="tickerContent">
-            <span class="ticker-item">🔥 LIVE: Manchester City takes the lead 2-1 against Real Madrid!</span>
-            <span class="ticker-item">💰 User_8921 just cashed out ₹45,500 on Aviator!</span>
-            <span class="ticker-item">🏏 IPL Finals: CSK odds boost to 2.15</span>
-            <span class="ticker-item">🎰 Mega Jackpot standing at ₹1,24,000,000</span>
-            <span class="ticker-item">⚡ Flash Promo: 50% deposit bonus active for the next hour!</span>
-        </div>
-    </div>
 
     <div class="layout-container">
         <!-- LEFT SIDEBAR -->
@@ -201,20 +162,22 @@
             <div class="menu-section">
                 <div class="menu-header">TOP Championships</div>
                 <ul class="menu-list">
-                    <li onclick="window.location.href='cricket.html'"><div><span class="menu-icon">🏏</span> Test Matches</div></li>
-                    <li onclick="window.location.href='cricket.html'"><div><span class="menu-icon">🏏</span> Caribbean Premier League</div></li>
+                    <li><div><span class="menu-icon">🏏</span> IPL Finals</div></li>
                     <li><div><span class="menu-icon">⚽</span> UEFA Champions League</div></li>
-                    <li><div><span class="menu-icon">⚽</span> Premier League</div></li>
-                    <li><div><span class="menu-icon">🏀</span> NBA</div></li>
+                    <li><div><span class="menu-icon">⚽</span> English Premier League</div></li>
+                    <li><div><span class="menu-icon">🏀</span> NBA Playoffs</div></li>
+                    <li><div><span class="menu-icon">🎮</span> CS:GO Major</div></li>
                 </ul>
             </div>
             <div class="menu-section">
-                <div class="menu-header">SPORTS</div>
+                <div class="menu-header">ALL SPORTS</div>
                 <ul class="menu-list">
-                    <li onclick="window.location.href='cricket.html'" class="active"><div><span class="menu-icon">🏏</span> Cricket</div> <span class="count">245</span></li>
-                    <li><div><span class="menu-icon">⚽</span> Football</div> <span class="count">1267</span></li>
+                    <li class="active"><div><span class="menu-icon">🏏</span> Cricket</div> <span class="count">245</span></li>
+                    <li><div><span class="menu-icon">⚽</span> Football</div> <span class="count">1,267</span></li>
                     <li><div><span class="menu-icon">🎾</span> Tennis</div> <span class="count">342</span></li>
-                    <li><div><span class="menu-icon">🎮</span> Esports</div> <span class="count">189</span></li>
+                    <li><div><span class="menu-icon">🏀</span> Basketball</div> <span class="count">189</span></li>
+                    <li><div><span class="menu-icon">🎮</span> Esports</div> <span class="count">412</span></li>
+                    <li><div><span class="menu-icon">🏓</span> Table Tennis</div> <span class="count">88</span></li>
                 </ul>
             </div>
         </aside>
@@ -224,116 +187,120 @@
             <div class="hero-banner">
                 <div class="hero-text">
                     <h1>WELCOME BONUS</h1>
-                    <h2>100% UP TO ₹10,000</h2>
-                    <p>Make your first deposit and get 100% bonus up to ₹10,000!</p>
-                    <button class="btn btn-solid-green" style="padding: 10px 20px;" onclick="window.location.href='signup.html'">REGISTER NOW</button>
+                    <h2>100% UP TO ₹20,000</h2>
+                    <p>Make your first deposit and double your wallet instantly!</p>
+                    <button class="btn btn-solid-green" style="padding: 12px 25px; font-size: 14px;" onclick="window.location.href='signup.html'">CLAIM BONUS</button>
                 </div>
                 <div class="hero-graphic"></div>
             </div>
 
-            <!-- HOME SCREEN CRICKET EVENTS -->
+            <div class="promo-banner" onclick="window.location.href='all-games.html'">
+                <div>
+                    <h3 style="color:white; font-size: 16px; margin-bottom: 5px;">ACCUMULATOR OF THE DAY</h3>
+                    <p style="color:var(--text-dark); font-size: 12px;">Place a multibet from our selected live events and get a 10% odds boost!</p>
+                </div>
+                <span style="font-size: 24px; font-weight: 900; color: var(--accent-yellow);">+10%</span>
+            </div>
+
+            <!-- CRICKET EVENTS -->
             <div class="section-header">
-                <div class="section-title"><span class="live-dot"></span> 🔥 TOP LIVE MATCHES</div>
+                <div class="section-title"><span class="live-dot"></span> 🏏 LIVE CRICKET</div>
                 <a href="cricket.html" class="view-all">View all Cricket</a>
             </div>
-
-            <div class="bet-list-container">
-                <!-- Test Match -->
-                <div class="bet-list-group">
-                    <div class="league-header">🏏 England vs Pakistan</div>
-                    <div class="match-row">
-                        <div class="match-info-col">
-                            <div class="team-line">
-                                <div class="team-name">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</div>
-                                <div class="team-score inactive">290/10 & 208/10</div>
-                            </div>
-                            <div class="team-line">
-                                <div class="team-name">🇵🇰 Pakistan</div>
-                                <div class="team-score">🏏 110/9 & 80/3 (20.4)</div>
-                            </div>
-                            <div class="match-status">
-                                <span class="live-badge">LIVE</span>
-                                <span>Event in progress / 2nd test</span>
-                            </div>
-                        </div>
-                        <div class="odds-col">
-                            <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">1.01</span></div>
-                            <div class="odd-box"><span class="odd-label">X</span><span class="odd-val">60.0</span></div>
-                            <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">9.85</span></div>
-                            <div class="more-markets">+5</div>
-                        </div>
+            <div class="bet-list-group">
+                <div class="league-header">Test Matches. International</div>
+                <div class="match-row">
+                    <div class="match-info-col">
+                        <div class="team-line"><div class="team-name">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</div><div class="team-score inactive">290 & 208</div></div>
+                        <div class="team-line"><div class="team-name">🇵🇰 Pakistan</div><div class="team-score">🏏 110 & 80/3</div></div>
+                        <div class="match-status"><span class="live-badge">LIVE</span> 2nd test</div>
                     </div>
-                </div>
-
-                <!-- India Local Leagues -->
-                <div class="bet-list-group">
-                    <div class="league-header">🏏 India. Local T20 Leagues</div>
-                    <div class="match-row" style="border-bottom: 1px solid var(--border-color); border-radius: 0;">
-                        <div class="match-info-col">
-                            <div class="team-line">
-                                <div class="team-name">🟢 Trivandrum Royals</div>
-                                <div class="team-score inactive">0/0</div>
-                            </div>
-                            <div class="team-line">
-                                <div class="team-name">🔴 Kollam Sailors</div>
-                                <div class="team-score">🏏 50/4 (8.5)</div>
-                            </div>
-                            <div class="match-status">
-                                <span class="live-badge">LIVE</span>
-                                <span>Kerala League</span>
-                            </div>
-                        </div>
-                        <div class="odds-col">
-                            <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">1.26</span></div>
-                            <div class="odd-box"><span class="odd-label">X</span><span class="odd-val">25.0</span></div>
-                            <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">3.94</span></div>
-                            <div class="more-markets">+91</div>
-                        </div>
-                    </div>
-                    <div class="match-row">
-                        <div class="match-info-col">
-                            <div class="team-line">
-                                <div class="team-name">🔵 Gorakhpur Lions</div>
-                                <div class="team-score">🏏 128/7 (17.4)</div>
-                            </div>
-                            <div class="team-line">
-                                <div class="team-name">🟡 Lucknow Falcons</div>
-                                <div class="team-score inactive">170/5</div>
-                            </div>
-                            <div class="match-status">
-                                <span class="live-badge">LIVE</span>
-                                <span>Uttar Pradesh Premier League</span>
-                            </div>
-                        </div>
-                        <div class="odds-col">
-                            <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">4.50</span></div>
-                            <div class="odd-box locked"><span class="odd-label">X</span><span class="odd-val disabled">-</span></div>
-                            <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">1.18</span></div>
-                            <div class="more-markets">+14</div>
-                        </div>
+                    <div class="odds-col">
+                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">1.01</span></div>
+                        <div class="odd-box"><span class="odd-label">X</span><span class="odd-val">60.0</span></div>
+                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">9.85</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- 1XGAMES ROUTING SECTION -->
+            <!-- FOOTBALL EVENTS -->
             <div class="section-header">
-                <div class="section-title"><span class="live-dot" style="background:var(--accent-blue); box-shadow: 0 0 8px var(--accent-blue);"></span> 1XGAMES</div>
-                <a href="all-games.html" class="view-all">View all</a>
+                <div class="section-title"><span class="live-dot"></span> ⚽ LIVE FOOTBALL</div>
+                <a href="#" class="view-all">View all Football</a>
+            </div>
+            <div class="bet-list-group">
+                <div class="league-header">UEFA Champions League</div>
+                <div class="match-row" style="border-bottom: 1px solid var(--border-color); border-radius: 0;">
+                    <div class="match-info-col">
+                        <div class="team-line"><div class="team-name">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Manchester City</div><div class="team-score">2</div></div>
+                        <div class="team-line"><div class="team-name">🇪🇸 Real Madrid</div><div class="team-score">1</div></div>
+                        <div class="match-status"><span class="live-badge">LIVE</span> 2nd Half 68:12</div>
+                    </div>
+                    <div class="odds-col">
+                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">1.15</span></div>
+                        <div class="odd-box"><span class="odd-label">X</span><span class="odd-val">6.50</span></div>
+                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">15.0</span></div>
+                    </div>
+                </div>
+                <div class="league-header" style="border-radius: 0; border-top: none;">English Premier League</div>
+                <div class="match-row">
+                    <div class="match-info-col">
+                        <div class="team-line"><div class="team-name">🔴 Arsenal</div><div class="team-score inactive">0</div></div>
+                        <div class="team-line"><div class="team-name">🔵 Chelsea</div><div class="team-score inactive">0</div></div>
+                        <div class="match-status">Starts in: 02h 15m</div>
+                    </div>
+                    <div class="odds-col">
+                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">2.10</span></div>
+                        <div class="odd-box"><span class="odd-label">X</span><span class="odd-val">3.40</span></div>
+                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">3.65</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BASKETBALL & ESPORTS -->
+            <div class="section-header">
+                <div class="section-title"><span class="live-dot" style="background:var(--accent-yellow); box-shadow: 0 0 8px var(--accent-yellow);"></span> 🏀 BASKETBALL & 🎮 ESPORTS</div>
+            </div>
+            <div class="bet-list-group">
+                <div class="league-header">NBA Playoffs</div>
+                <div class="match-row" style="border-bottom: 1px solid var(--border-color); border-radius: 0;">
+                    <div class="match-info-col">
+                        <div class="team-line"><div class="team-name">🟡 LA Lakers</div><div class="team-score">102</div></div>
+                        <div class="team-line"><div class="team-name">🟢 Boston Celtics</div><div class="team-score">98</div></div>
+                        <div class="match-status"><span class="live-badge">LIVE</span> Q4 02:14</div>
+                    </div>
+                    <div class="odds-col">
+                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">1.08</span></div>
+                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">8.50</span></div>
+                    </div>
+                </div>
+                <div class="league-header" style="border-radius: 0; border-top: none;">CS:GO Major Championship</div>
+                <div class="match-row">
+                    <div class="match-info-col">
+                        <div class="team-line"><div class="team-name">🟡 Natus Vincere</div><div class="team-score">14</div></div>
+                        <div class="team-line"><div class="team-name">🔴 FaZe Clan</div><div class="team-score">15</div></div>
+                        <div class="match-status"><span class="live-badge">LIVE</span> Map 3 - Mirage</div>
+                    </div>
+                    <div class="odds-col">
+                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">3.20</span></div>
+                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">1.35</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CASINO CATALOG -->
+            <div class="section-header">
+                <div class="section-title">🎰 TOP CASINO & SLOTS</div>
+                <a href="all-games.html" class="view-all">View all Games</a>
             </div>
             <div class="games-grid">
                 <div class="game-thumb bg-crash" onclick="window.location.href='crash.html'">Crash <span style="position:absolute; top:5px; right:5px; font-size:10px; color:var(--accent-green);">LIVE</span></div>
                 <div class="game-thumb bg-aviator" onclick="window.location.href='aviator.html'">Aviator <span style="position:absolute; top:5px; right:5px; font-size:10px; color:var(--accent-yellow);">HOT</span></div>
-                <div class="game-thumb bg-mines" onclick="window.location.href='mines.html'">Mines</div>
-                <div class="game-thumb bg-tower" onclick="window.location.href='chicken-rush.html'">Chicken Rush</div>
+                <div class="game-thumb bg-slots">Crystal Slots</div>
+                <div class="game-thumb bg-slots">Wild West Gold</div>
                 <div class="game-thumb bg-wheel" onclick="window.location.href='wheel.html'">Lucky Wheel</div>
             </div>
-
-            <!-- CASINO / MATKA ROUTING SECTION -->
-            <div class="section-header">
-                <div class="section-title"><span class="live-dot"></span> CASINO & LOCAL</div>
-                <a href="all-games.html" class="view-all">View all</a>
-            </div>
-            <div class="games-grid" style="margin-bottom: 40px;">
+            <div class="games-grid" style="margin-bottom: 20px;">
                 <div class="game-thumb bg-bj" onclick="window.location.href='matka.html'">Matka Live <span style="position:absolute; top:5px; right:5px; font-size:10px; color:var(--accent-yellow);">HOT</span></div>
                 <div class="game-thumb bg-roul" onclick="window.location.href='roulette.html'">Roulette Live</div>
                 <div class="game-thumb bg-bac" onclick="window.location.href='baccarat.html'">Baccarat Live</div>
@@ -348,97 +315,109 @@
                 <div class="tab active">BET SLIP</div>
                 <div class="tab">MY BETS</div>
             </div>
-            <div style="background: var(--bg-panel); padding: 40px 20px; text-align: center; color: var(--text-muted); border-radius: 8px; margin-bottom: 15px; border: 1px dashed var(--border-color); transition: 0.3s;" onmouseover="this.style.borderColor='var(--accent-blue)'" onmouseout="this.style.borderColor='var(--border-color)'">
+            <div style="background: var(--bg-panel); padding: 40px 20px; text-align: center; color: var(--text-muted); border-radius: 8px; margin-bottom: 15px; border: 1px dashed var(--border-color);">
                 <div style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;">🎫</div>
                 Your bet slip is empty.
             </div>
-            <button class="btn btn-solid-blue btn-full" onclick="window.location.href='signup.html'">REGISTER AND PLACE BET</button>
+            <button class="btn-full" onclick="window.location.href='signup.html'">REGISTER AND PLACE BET</button>
 
-            <!-- Dynamic Activity Feed -->
-            <div class="activity-feed">
-                <div class="feed-header">🔴 LIVE ACTIVITY</div>
-                <div class="feed-items" id="liveFeed">
-                    <!-- Feed items injected via JS -->
+            <!-- Activity Feed -->
+            <div style="margin-top: 20px; background: var(--bg-panel); border-radius: 6px; border: 1px solid var(--border-color); overflow: hidden;">
+                <div style="padding: 10px 15px; background: var(--bg-card); font-size: 11px; font-weight: bold; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">🔴 LIVE WINNINGS</div>
+                <div style="padding: 10px; display: flex; flex-direction: column; gap: 8px;" id="liveFeed">
+                    <!-- JS Feed -->
                 </div>
             </div>
         </aside>
     </div>
 
+    <!-- Compliance & Legitimacy Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Information</h4>
+                <ul>
+                    <li>About Us</li>
+                    <li>Terms and Conditions</li>
+                    <li>Privacy Policy</li>
+                    <li>Cookie Policy</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Betting</h4>
+                <ul>
+                    <li>Sports</li>
+                    <li>Live Casino</li>
+                    <li>Virtual Sports</li>
+                    <li>Live Results</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Help & Support</h4>
+                <ul>
+                    <li>Contact Us</li>
+                    <li>FAQ</li>
+                    <li>Payment Methods</li>
+                    <li>Responsible Gaming</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Secure Payments</h4>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <div style="background: white; color: #1a1f71; padding: 5px 10px; border-radius: 4px; font-weight: 900; font-style: italic;">VISA</div>
+                    <div style="background: #eb001b; color: white; padding: 5px 10px; border-radius: 4px; font-weight: 900; font-style: italic;">MasterCard</div>
+                    <div style="background: #f7931a; color: white; padding: 5px 10px; border-radius: 4px; font-weight: 900;">₿ BTC</div>
+                    <div style="background: #5f259f; color: white; padding: 5px 10px; border-radius: 4px; font-weight: 900;">UPI</div>
+                </div>
+                <div class="trust-badges">
+                    <span style="color: #ff3333; border-color: #ff3333;">18+</span>
+                    <span style="color: #5c9e28; border-color: #5c9e28; font-size: 12px; display: flex; align-items: center; text-align: center;">Curacao<br>eGaming</span>
+                    <span style="color: #a1b1c2; border-color: #a1b1c2; font-size: 14px;">SSL<br>SECURE</span>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2026 1xBet. All rights reserved. Gambling can be addictive. Play responsibly.
+        </div>
+    </footer>
+
+    <!-- Floating Live Chat -->
+    <div class="live-chat" onclick="alert('Live Chat Agent connecting...')">💬</div>
+
     <script>
-        // 1. Live Clock functionality localized to IST
         function updateClock() {
             const now = new Date();
-            // Using Asia/Kolkata timezone to match the requested Indian Standard Time (IST)
-            const options = { 
-                timeZone: 'Asia/Kolkata', 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit', 
-                hour12: false 
-            };
-            const timeString = now.toLocaleTimeString('en-IN', options);
-            document.getElementById('live-clock').innerHTML = `🕒 ${timeString} IST ▾`;
+            const options = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            document.getElementById('live-clock').innerHTML = `🕒 ${now.toLocaleTimeString('en-IN', options)} IST ▾`;
         }
-        
-        // Initialize clock immediately and set interval
         updateClock();
         setInterval(updateClock, 1000);
 
-        // 2. Clone ticker content for seamless scrolling
-        const ticker = document.getElementById('tickerContent');
-        ticker.innerHTML += ticker.innerHTML; 
-
-        // 3. Simulated Live Activity Feed logic
-        const gamesList = ['Aviator', 'Mines', 'Cricket Match', 'Matka Live', 'Roulette'];
+        const gamesList = ['Aviator', 'Crystal Slots', 'CS:GO Map 3', 'Live Roulette', 'NBA Lakers ML'];
         const feedContainer = document.getElementById('liveFeed');
 
-        function generateRandomActivity() {
-            const userNum = Math.floor(Math.random() * 9000) + 1000;
-            const winAmount = (Math.random() * 50000 + 500).toFixed(0);
-            const game = gamesList[Math.floor(Math.random() * gamesList.length)];
-            
-            // Format number with commas
-            const formattedWin = new Intl.NumberFormat('en-IN').format(winAmount);
-
+        function generateActivity() {
+            const user = Math.floor(Math.random() * 9000) + 1000;
+            const win = new Intl.NumberFormat('en-IN').format((Math.random() * 80000 + 1000).toFixed(0));
             const item = document.createElement('div');
-            item.className = 'feed-item';
-            item.innerHTML = `<strong style="color:var(--text-main);">User_${userNum}</strong> won <span style="color:var(--accent-green);">₹${formattedWin}</span> on ${game}`;
-            
+            item.style.cssText = 'font-size: 11px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px; border-left: 2px solid var(--accent-blue);';
+            item.innerHTML = `<strong>User_${user}</strong> won <span style="color:var(--accent-green);">₹${win}</span> on ${gamesList[Math.floor(Math.random() * gamesList.length)]}`;
             feedContainer.prepend(item);
-
-            // Keep only the last 4 items
-            if (feedContainer.children.length > 4) {
-                feedContainer.removeChild(feedContainer.lastChild);
-            }
+            if (feedContainer.children.length > 4) feedContainer.removeChild(feedContainer.lastChild);
         }
+        for(let i=0; i<4; i++) generateActivity();
+        setInterval(generateActivity, 4500);
 
-        // Generate initial fake feed items
-        for(let i = 0; i < 4; i++) {
-            generateRandomActivity();
-        }
-
-        // Randomly push new updates every 3 to 8 seconds to simulate real-time bets
-        (function loopFeed() {
-            const rand = Math.round(Math.random() * 5000) + 3000;
-            setTimeout(function() {
-                generateRandomActivity();
-                loopFeed();
-            }, rand);
-        }());
-
-        // Odds click interaction simulation
-        const oddBoxes = document.querySelectorAll('.odd-box:not(.locked)');
-        oddBoxes.forEach(box => {
+        // Odds Interaction
+        document.querySelectorAll('.odd-box:not(.locked)').forEach(box => {
             box.addEventListener('click', function() {
                 this.style.backgroundColor = 'var(--accent-blue)';
-                this.querySelector('.odd-val').style.color = 'white';
-                this.querySelector('.odd-label').style.color = 'rgba(255,255,255,0.8)';
+                this.style.borderColor = 'var(--accent-blue)';
                 setTimeout(() => {
                     alert('Odd added to betslip!');
                     this.style.backgroundColor = '';
-                    this.querySelector('.odd-val').style.color = '';
-                    this.querySelector('.odd-label').style.color = '';
-                }, 200);
+                    this.style.borderColor = '';
+                }, 300);
             });
         });
     </script>
