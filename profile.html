@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1xBet - User Profile & KYC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40; --bg-hover: #1e3650; --bg-header: #0d1a27;
+            --text-main: #ffffff; --text-muted: #8d9ba8; --text-dark: #a1b1c2;
+            --accent-blue: #238cf5; --accent-green: #5c9e28; --accent-red: #ff3333; --accent-yellow: #ffaa00;
+            --border-color: #1a3148;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-size: 13px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: var(--bg-base); } ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        
+        /* Header */
+        header { background-color: var(--bg-header); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; min-height: 60px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .header-left, .header-right { display: flex; align-items: center; gap: 15px; }
+        .logo { font-size: 22px; font-weight: 900; font-style: italic; cursor: pointer; transition: 0.2s; } .logo:hover { transform: scale(1.05); } .logo span { color: var(--accent-blue); }
+        .wallet { background: var(--bg-card); padding: 8px 15px; border-radius: 4px; font-weight: bold; border: 1px solid var(--accent-blue); font-size: 13px; }
+        .close-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-weight: 600; text-transform: uppercase; } .close-btn:hover { color: white; border-color: white; }
+
+        /* Layout Grid */
+        .layout-container { display: grid; grid-template-columns: 260px 1fr; gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; flex-grow: 1; }
+        
+        /* Profile Sidebar */
+        .profile-sidebar { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; height: fit-content; }
+        .user-card { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .avatar { width: 80px; height: 80px; background: var(--bg-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 15px; border: 2px solid var(--accent-blue); }
+        .user-name { font-size: 16px; font-weight: 800; margin-bottom: 5px; }
+        .user-id { color: var(--text-muted); font-size: 12px; font-family: monospace; }
+        .kyc-badge { margin-top: 10px; background: rgba(255, 170, 0, 0.2); color: var(--accent-yellow); padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; border: 1px solid var(--accent-yellow); }
+        .kyc-badge.verified { background: rgba(92, 158, 40, 0.2); color: var(--accent-green); border-color: var(--accent-green); }
+
+        .profile-nav { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+        .profile-nav li { padding: 12px 15px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 10px; }
+        .profile-nav li:hover { background: var(--bg-hover); color: white; }
+        .profile-nav li.active { background: var(--accent-blue); color: white; }
+
+        /* Main Content Area */
+        .profile-content { display: flex; flex-direction: column; gap: 20px; }
+        .content-section { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; display: none; animation: fadeIn 0.3s ease; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-header { font-size: 18px; font-weight: 800; margin-bottom: 25px; color: white; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+
+        /* Forms */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .input-group.full { grid-column: 1 / -1; }
+        .input-group label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .input-group input, .input-group select { background: var(--bg-card); border: 1px solid var(--border-color); color: white; padding: 12px; font-size: 14px; border-radius: 4px; outline: none; transition: 0.2s; }
+        .input-group input:focus, .input-group select:focus { border-color: var(--accent-blue); }
+        .input-group input:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .btn-submit { background: var(--accent-green); color: white; border: none; padding: 12px 25px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.2s; margin-top: 10px; }
+        .btn-submit:hover { background: #4e8721; }
+
+        /* KYC Upload Area */
+        .upload-area { border: 2px dashed var(--border-color); background: var(--bg-card); padding: 40px; text-align: center; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-bottom: 20px; }
+        .upload-area:hover { border-color: var(--accent-blue); background: var(--bg-hover); }
+        .upload-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+        .upload-text { color: var(--text-dark); font-weight: 500; font-size: 14px; }
+        .upload-sub { color: var(--text-muted); font-size: 11px; margin-top: 5px; }
+
+        /* Bet History Table */
+        .history-table { width: 100%; border-collapse: collapse; }
+        .history-table th, .history-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .history-table th { color: var(--text-muted); font-size: 11px; text-transform: uppercase; font-weight: 700; background: var(--bg-card); }
+        .history-table td { font-size: 13px; font-weight: 500; }
+        .history-table tr:hover td { background: var(--bg-hover); }
+        
+        .status-won { color: var(--accent-green); font-weight: 700; }
+        .status-lost { color: var(--accent-red); font-weight: 700; }
+        .status-pending { color: var(--accent-yellow); font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
+        </div>
+        <div class="header-right">
+            <div class="wallet">₹ 10000.00</div>
+            <button class="close-btn" onclick="window.location.href='index.html'">BACK TO HUB</button>
+        </div>
+    </header>
+
+    <div class="layout-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="profile-sidebar">
+            <div class="user-card">
+                <div class="avatar">👤</div>
+                <div class="user-name">Vibekjyoti Sahoo</div>
+                <div class="user-id">ID: 84920174</div>
+                <div class="kyc-badge" id="kycStatusBadge">UNVERIFIED</div>
+            </div>
+
+            <ul class="profile-nav">
+                <li class="active" onclick="switchTab('details', this)">👤 Personal Details</li>
+                <li onclick="switchTab('kyc', this)">🛡️ KYC Verification</li>
+                <li onclick="switchTab('history', this)">📜 Bet History</li>
+                <li onclick="switchTab('security', this)">🔒 Security</li>
+                <li style="color: var(--accent-red); margin-top: 15px;" onclick="window.location.href='login.html'">🚪 Log Out</li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="profile-content">
+            
+            <!-- Personal Details Tab -->
+            <div class="content-section active" id="tab-details">
+                <div class="section-header">Personal Details</div>
+                <form onsubmit="event.preventDefault(); alert('Profile updated successfully!');">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>First Name</label>
+                            <input type="text" value="Vibekjyoti">
+                        </div>
+                        <div class="input-group">
+                            <label>Last Name</label>
+                            <input type="text" value="Sahoo">
+                        </div>
+                        <div class="input-group">
+                            <label>Date of Birth</label>
+                            <input type="date" value="2005-08-23">
+                        </div>
+                        <div class="input-group">
+                            <label>Email Address</label>
+                            <input type="email" value="vibekjyoti@example.com">
+                        </div>
+                        <div class="input-group">
+                            <label>Phone Number</label>
+                            <input type="tel" value="+91 98765 43210" disabled>
+                        </div>
+                        <div class="input-group">
+                            <label>Currency</label>
+                            <select disabled>
+                                <option>INR (Indian Rupee)</option>
+                            </select>
+                        </div>
+                        <div class="input-group full">
+                            <label>Residential Address</label>
+                            <input type="text" placeholder="Enter your full address">
+                        </div>
+                    </div>
+                    <button class="btn-submit">SAVE CHANGES</button>
+                </form>
+            </div>
+
+            <!-- KYC Verification Tab -->
+            <div class="content-section" id="tab-kyc">
+                <div class="section-header">Identity Verification (KYC)</div>
+                <p style="color: var(--text-dark); margin-bottom: 20px; font-size: 13px; line-height: 1.5;">To comply with anti-money laundering regulations and enable withdrawals, please upload a valid government-issued ID (Aadhar Card, PAN Card, or Passport).</p>
+                
+                <div id="kycUploadForm">
+                    <div class="input-group full">
+                        <label>Document Type</label>
+                        <select>
+                            <option>Aadhar Card</option>
+                            <option>PAN Card</option>
+                            <option>Passport</option>
+                            <option>Driving License</option>
+                        </select>
+                    </div>
+
+                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">Click to upload or drag and drop</div>
+                        <div class="upload-sub">JPEG, PNG, or PDF (Max 5MB)</div>
+                        <input type="file" id="fileInput" style="display: none;" accept="image/*,.pdf" onchange="handleFileUpload(this)">
+                    </div>
+
+                    <button class="btn-submit" onclick="submitKYC()">SUBMIT FOR VERIFICATION</button>
+                </div>
+
+                <div id="kycPendingState" style="display: none; text-align: center; padding: 40px;">
+                    <div style="font-size: 50px; margin-bottom: 15px;">⏳</div>
+                    <h3 style="margin-bottom: 10px;">Verification Pending</h3>
+                    <p style="color: var(--text-muted);">Your documents have been submitted and are currently under review by our compliance team. This usually takes 1-2 hours.</p>
+                </div>
+            </div>
+
+            <!-- Bet History Tab -->
+            <div class="content-section" id="tab-history">
+                <div class="section-header">Recent Bets</div>
+                <div style="overflow-x: auto;">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Event / Game</th>
+                                <th>Bet Amount</th>
+                                <th>Odds / Mult</th>
+                                <th>Status</th>
+                                <th>Payout</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Today, 14:32</td>
+                                <td>Aviator</td>
+                                <td>₹ 500.00</td>
+                                <td>2.45x</td>
+                                <td class="status-won">WON</td>
+                                <td>₹ 1225.00</td>
+                            </tr>
+                            <tr>
+                                <td>Today, 11:15</td>
+                                <td>Cricket: ENG vs PAK</td>
+                                <td>₹ 1000.00</td>
+                                <td>1.85</td>
+                                <td class="status-pending">PENDING</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Yesterday, 20:45</td>
+                                <td>Crash</td>
+                                <td>₹ 200.00</td>
+                                <td>-</td>
+                                <td class="status-lost">LOST</td>
+                                <td>₹ 0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Aug 29, 18:30</td>
+                                <td>Mines (5 Mines)</td>
+                                <td>₹ 300.00</td>
+                                <td>3.53x</td>
+                                <td class="status-won">WON</td>
+                                <td>₹ 1059.00</td>
+                            </tr>
+                            <tr>
+                                <td>Aug 28, 09:10</td>
+                                <td>Football: Man City vs RMA</td>
+                                <td>₹ 1500.00</td>
+                                <td>2.10</td>
+                                <td class="status-won">WON</td>
+                                <td>₹ 3150.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Security Tab -->
+            <div class="content-section" id="tab-security">
+                <div class="section-header">Security Settings</div>
+                <form onsubmit="event.preventDefault(); alert('Password updated!');">
+                    <div class="input-group full">
+                        <label>Current Password</label>
+                        <input type="password" placeholder="Enter current password" required>
+                    </div>
+                    <div class="input-group full">
+                        <label>New Password</label>
+                        <input type="password" placeholder="Enter new password" required>
+                    </div>
+                    <div class="input-group full">
+                        <label>Confirm New Password</label>
+                        <input type="password" placeholder="Confirm new password" required>
+                    </div>
+                    <button class="btn-submit" style="background: var(--accent-blue);">UPDATE PASSWORD</button>
+                </form>
+                
+                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                    <h4 style="margin-bottom: 10px;">Two-Factor Authentication (2FA)</h4>
+                    <p style="color: var(--text-muted); margin-bottom: 15px; font-size: 12px;">Enhance your account security by enabling Google Authenticator.</p>
+                    <button class="btn-outline">ENABLE 2FA</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Tab Switching Logic
+        function switchTab(tabId, element) {
+            // Update nav styles
+            document.querySelectorAll('.profile-nav li').forEach(li => li.classList.remove('active'));
+            element.classList.add('active');
+
+            // Hide all sections, show target
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        // KYC File Upload Mockup
+        function handleFileUpload(input) {
+            if (input.files && input.files[0]) {
+                const fileName = input.files[0].name;
+                const uploadText = document.querySelector('.upload-text');
+                uploadText.innerHTML = `Selected File: <span style="color:var(--accent-blue)">${fileName}</span>`;
+                document.querySelector('.upload-sub').innerText = "File ready to submit.";
+            }
+        }
+
+        // KYC Submit Mockup
+        function submitKYC() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert("Please select a document to upload first.");
+                return;
+            }
+            
+            // Show Pending State
+            document.getElementById('kycUploadForm').style.display = 'none';
+            document.getElementById('kycPendingState').style.display = 'block';
+            
+            // Update Sidebar Badge
+            const badge = document.getElementById('kycStatusBadge');
+            badge.innerText = 'PENDING REVIEW';
+            badge.style.background = 'rgba(35, 140, 245, 0.2)';
+            badge.style.color = 'var(--accent-blue)';
+            badge.style.borderColor = 'var(--accent-blue)';
+        }
+    </script>
+</body>
+</html>

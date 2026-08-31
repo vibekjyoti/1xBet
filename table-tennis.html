@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1xBet - Table Tennis Sportsbook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-base: #0b1520; --bg-panel: #112030; --bg-card: #172b40; --bg-hover: #1e3650; --bg-header: #0d1a27; --text-main: #ffffff; --text-muted: #8d9ba8; --text-dark: #a1b1c2; --accent-blue: #238cf5; --accent-green: #5c9e28; --border-color: #1a3148; --red-live: #ff3333; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-size: 13px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: var(--bg-base); } ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        
+        header { background-color: var(--bg-header); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; min-height: 60px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .header-left, .header-right { display: flex; align-items: center; gap: 15px; }
+        .logo { font-size: 22px; font-weight: 900; font-style: italic; cursor: pointer; } .logo span { color: var(--accent-blue); }
+        .nav-links { display: flex; gap: 20px; list-style: none; } .nav-links li { font-weight: 600; font-size: 12px; cursor: pointer; color: var(--text-dark); transition: 0.2s; position: relative; } .nav-links li:hover, .nav-links li.active { color: var(--text-main); }
+        
+        .btn { padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+        .btn-solid-green { background: var(--accent-green); color: white; }
+        .btn-solid-blue { background: var(--accent-blue); color: white; }
+
+        .layout-container { display: grid; grid-template-columns: 240px minmax(0, 1fr) 300px; gap: 15px; padding: 15px; flex-grow: 1; height: calc(100vh - 60px); }
+        .sidebar { overflow-y: auto; padding-right: 5px; }
+        .menu-section { background-color: var(--bg-panel); border-radius: 6px; margin-bottom: 10px; border: 1px solid transparent; }
+        .menu-header { padding: 12px 15px; background-color: var(--bg-card); font-weight: 600; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); }
+        .menu-list { list-style: none; } .menu-list li { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; } .menu-list li:hover, .menu-list li.active { background-color: var(--bg-hover); color: var(--accent-blue); } .count { color: var(--text-muted); font-size: 11px; }
+
+        .main-content { overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding-right: 5px; }
+        .horizontal-nav { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
+        .nav-card { background-color: var(--bg-panel); padding: 12px 25px; border-radius: 8px; min-width: 120px; text-align: center; cursor: pointer; border: 1px solid var(--border-color); transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .nav-card:hover, .nav-card.active { border-color: var(--accent-blue); background-color: var(--bg-card); color: var(--accent-blue); }
+
+        .section-header { display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 10px 15px; border-radius: 6px; border: 1px solid var(--border-color); }
+        .section-title { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+        .live-dot { width: 8px; height: 8px; background: #e04464; border-radius: 50%; box-shadow: 0 0 8px #e04464; animation: blink 1.5s infinite; }
+        
+        .bet-list-group { display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .league-header { background: var(--bg-hover); padding: 10px 15px; border-radius: 6px 6px 0 0; font-size: 12px; font-weight: 700; color: var(--text-dark); display: flex; justify-content: space-between; border: 1px solid var(--border-color); border-bottom: none; }
+        .match-row { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 15px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .match-row:last-child { border-radius: 0 0 6px 6px; } .match-row:hover { background: #15273a; }
+        .match-info-col { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .team-line { display: flex; justify-content: space-between; padding-right: 30px; }
+        .team-name { font-weight: 600; font-size: 13px; cursor: pointer; } .team-name:hover { color: var(--accent-blue); text-decoration: underline; }
+        .team-score { font-weight: 700; color: #e04464; font-size: 13px; font-variant-numeric: tabular-nums;}
+        .match-status { display: flex; gap: 10px; font-size: 11px; color: var(--text-muted); align-items: center; }
+        .live-badge { background: #e04464; color: #fff; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 9px; }
+        
+        .odds-col { display: flex; gap: 6px; align-items: center; }
+        .odd-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 12px; min-width: 60px; text-align: center; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: 0.2s; }
+        .odd-box:hover { border-color: var(--accent-blue); background: rgba(35, 140, 245, 0.1); transform: translateY(-2px); }
+        .odd-label { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+        .odd-val { font-size: 13px; font-weight: 800; color: var(--text-main); }
+
+        .tabs { display: flex; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .tab { flex: 1; text-align: center; padding: 12px 5px; cursor: pointer; font-size: 11px; font-weight: 600; color: var(--text-dark); } .tab.active { color: var(--text-main); border-bottom: 2px solid var(--accent-blue); }
+        .btn-full { width: 100%; padding: 12px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
+            <ul class="nav-links">
+                <li class="active">SPORTS ▾</li>
+                <li onclick="window.location.href='index.html'">LIVE ▾</li>
+                <li onclick="window.location.href='all-games.html'">CASINO ▾</li>
+            </ul>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-outline" onclick="window.location.href='login.html'">LOG IN</button>
+            <button class="btn btn-solid-green" onclick="window.location.href='signup.html'">REGISTRATION</button>
+            <span id="live-clock" style="font-size: 12px; font-weight: 600; color: var(--accent-blue);">🕒 Loading...</span>
+        </div>
+    </header>
+
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="menu-section">
+                <div class="menu-header">TOP Table Tennis Events</div>
+                <ul class="menu-list">
+                    <li><div><span class="menu-icon">🏓</span> TT Cup</div></li>
+                    <li><div><span class="menu-icon">🏓</span> Setka Cup</div></li>
+                    <li><div><span class="menu-icon">🏓</span> Pro League</div></li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <div class="menu-header">ALL SPORTS</div>
+                <ul class="menu-list">
+                    <li onclick="window.location.href='cricket.html'"><div><span class="menu-icon">🏏</span> Cricket</div> <span class="count">245</span></li>
+                    <li onclick="window.location.href='football.html'"><div><span class="menu-icon">⚽</span> Football</div> <span class="count">1,267</span></li>
+                    <li onclick="window.location.href='tennis.html'"><div><span class="menu-icon">🎾</span> Tennis</div> <span class="count">342</span></li>
+                    <li onclick="window.location.href='basketball.html'"><div><span class="menu-icon">🏀</span> Basketball</div> <span class="count">189</span></li>
+                    <li onclick="window.location.href='esports.html'"><div><span class="menu-icon">🎮</span> Esports</div> <span class="count">412</span></li>
+                    <li class="active"><div><span class="menu-icon">🏓</span> Table Tennis</div> <span class="count">88</span></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="horizontal-nav">
+                <div class="nav-card" onclick="window.location.href='football.html'"><span>⚽</span><span>Football</span></div>
+                <div class="nav-card" onclick="window.location.href='tennis.html'"><span>🎾</span><span>Tennis</span></div>
+                <div class="nav-card" onclick="window.location.href='basketball.html'"><span>🏀</span><span>Basketball</span></div>
+                <div class="nav-card" onclick="window.location.href='esports.html'"><span>🎮</span><span>Esports</span></div>
+                <div class="nav-card active"><span>🏓</span><span>Table Tennis</span></div>
+            </div>
+
+            <div class="section-header">
+                <div class="section-title"><span class="live-dot"></span> LIVE TABLE TENNIS</div>
+            </div>
+
+            <div class="bet-list-group">
+                <div class="league-header"><span>🏓 Setka Cup</span><span>Collapse ∧</span></div>
+                <div class="match-row" style="border-bottom:none;">
+                    <div class="match-info-col">
+                        <div class="team-line"><div class="team-name">🇺🇦 Ivan Ivanov</div><div class="team-score">11 9 10</div></div>
+                        <div class="team-line"><div class="team-name">🇺🇦 Petr Petrov</div><div class="team-score">8 11 12</div></div>
+                        <div class="match-status"><span class="live-badge">LIVE</span> Set 3</div>
+                    </div>
+                    <div class="odds-col">
+                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">2.10</span></div>
+                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">1.65</span></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="tabs">
+                <div class="tab active">BET SLIP</div>
+                <div class="tab">MY BETS</div>
+            </div>
+            <div style="background: var(--bg-panel); padding: 40px 20px; text-align: center; color: var(--text-muted); border-radius: 8px; margin-bottom: 15px; border: 1px dashed var(--border-color);">
+                <div style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;">🎫</div>
+                Your bet slip is empty.
+            </div>
+            <button class="btn btn-solid-blue btn-full" onclick="window.location.href='signup.html'">REGISTER AND PLACE BET</button>
+        </aside>
+    </div>
+    <script>
+        setInterval(() => {
+            const options = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            document.getElementById('live-clock').innerHTML = `🕒 ${new Date().toLocaleTimeString('en-IN', options)} IST ▾`;
+        }, 1000);
+    </script>
+</body>
+</html>
