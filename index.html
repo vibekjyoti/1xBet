@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>1xBet Dashboard - Enterprise Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
             --accent-yellow: #ffaa00; --border-color: #1a3148; --red-live: #ff3333;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
-        body { background-color: var(--bg-base); color: var(--text-main); font-size: 13px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-size: 12px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -28,112 +28,158 @@
         /* Animations */
         @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(35, 140, 245, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(35, 140, 245, 0); } 100% { box-shadow: 0 0 0 0 rgba(35, 140, 245, 0); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         /* Header */
-        header { background-color: var(--bg-header); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; min-height: 60px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        header { background-color: var(--bg-header); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; min-height: 55px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .header-left, .header-right { display: flex; align-items: center; gap: 15px; }
-        .logo { font-size: 22px; font-weight: 900; font-style: italic; letter-spacing: -0.5px; margin-right: 15px; cursor: pointer; transition: transform 0.2s; }
+        .logo { font-size: 24px; font-weight: 900; font-style: italic; letter-spacing: -1px; margin-right: 15px; cursor: pointer; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); transition: 0.2s; }
         .logo:hover { transform: scale(1.05); }
         .logo span { color: var(--accent-blue); }
-        .nav-links { display: flex; gap: 20px; list-style: none; }
-        .nav-links li { font-weight: 600; font-size: 12px; cursor: pointer; text-transform: uppercase; color: var(--text-dark); transition: 0.2s; position: relative; }
-        .nav-links li:hover, .nav-links li.active { color: var(--text-main); }
-        .nav-links li::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--accent-blue); transition: 0.3s; }
-        .nav-links li:hover::after, .nav-links li.active::after { width: 100%; }
+        .badge-app { background: var(--accent-green); font-size: 9px; padding: 3px 6px; border-radius: 3px; font-weight: 700; cursor: pointer; color: white; }
+        .nav-links { display: flex; gap: 18px; list-style: none; margin-left: 10px; }
+        .nav-links li { font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase; color: var(--text-main); transition: 0.2s; position: relative; opacity: 0.8; }
+        .nav-links li:hover, .nav-links li.active { opacity: 1; }
+        .nav-links li::after { content: ' ▾'; font-size: 9px; opacity: 0.6; }
 
-        /* Buttons */
-        .btn { padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; font-size: 12px; text-transform: uppercase; transition: 0.2s; }
+        .btn { padding: 8px 14px; border-radius: 3px; border: none; cursor: pointer; font-weight: 700; font-size: 11px; text-transform: uppercase; transition: 0.2s; }
         .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-main); }
         .btn-solid-green { background: var(--accent-green); color: white; animation: pulseGlow 2s infinite; }
         .btn-solid-green:hover { background: var(--accent-green-hover); transform: translateY(-2px); }
         
         /* Layout Grid */
-        .layout-container { display: grid; grid-template-columns: 240px minmax(0, 1fr) 300px; gap: 15px; padding: 15px; flex-grow: 1; }
-        .sidebar { overflow-y: auto; padding-right: 5px; }
+        .layout-container { display: grid; grid-template-columns: 220px minmax(0, 1fr) 280px; gap: 15px; padding: 15px; flex-grow: 1; align-items: start; }
+        .sidebar { position: sticky; top: 70px; max-height: calc(100vh - 85px); overflow-y: auto; padding-right: 5px; }
         
-        .menu-section { background-color: var(--bg-panel); border-radius: 6px; margin-bottom: 10px; overflow: hidden; border: 1px solid transparent; transition: 0.3s; }
-        .menu-header { padding: 12px 15px; background-color: var(--bg-card); font-weight: 600; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .menu-section { margin-bottom: 10px; }
+        .menu-header { padding: 10px 15px; font-weight: 600; font-size: 11px; text-transform: uppercase; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; background: transparent; border-bottom: 1px solid var(--border-color); }
         .menu-list { list-style: none; }
-        .menu-list li { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; font-size: 13px; }
-        .menu-list li:hover, .menu-list li.active { background-color: var(--bg-hover); padding-left: 20px; color: var(--accent-blue); }
-        .count { color: var(--text-muted); font-size: 11px; }
+        .menu-list li { padding: 8px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; font-size: 12px; color: var(--text-dark); border-radius: 4px; margin-bottom: 2px; }
+        .menu-list li:hover, .menu-list li.active { background-color: var(--bg-hover); color: var(--text-main); }
+        .menu-icon { margin-right: 8px; font-size: 14px; opacity: 0.7; }
+        .count { color: var(--text-muted); font-size: 10px; }
+        .time-filters { display: flex; gap: 10px; padding: 10px 15px; font-size: 10px; color: var(--text-muted); font-weight: 600; }
+        .time-filters span { cursor: pointer; transition: 0.2s; }
+        .time-filters span:hover, .time-filters span.active { color: var(--text-main); }
 
         /* Main Center Content */
-        .main-content { overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding-right: 5px; }
-        .hero-banner { background: linear-gradient(135deg, #0f2c4d 0%, #06111d 100%); border-radius: 8px; padding: 35px; position: relative; overflow: hidden; border: 1px solid var(--border-color); min-height: 220px; display: flex; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .hero-text { position: relative; z-index: 2; max-width: 50%; }
-        .hero-text h1 { font-size: 20px; margin-bottom: 5px; font-weight: 700; }
-        .hero-text h2 { font-size: 36px; color: var(--accent-blue); margin-bottom: 15px; font-weight: 800; line-height: 1.1; }
+        .main-content { overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding-bottom: 40px; }
         
-        .promo-banner { background: linear-gradient(45deg, #510a12, #a51829); padding: 15px 25px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid #ff3366; }
-        .promo-banner:hover { box-shadow: 0 0 20px rgba(230,0,61,0.4); }
-        
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; margin-top: 10px; }
-        .section-title { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
-        .live-dot { width: 8px; height: 8px; background: var(--red-live); border-radius: 50%; display: inline-block; box-shadow: 0 0 8px var(--red-live); animation: blink 1.5s infinite; }
-        .view-all { color: var(--accent-blue); font-size: 12px; cursor: pointer; text-decoration: none; }
+        /* Hero Banner */
+        .hero-banner { 
+            background: url('https://images.unsplash.com/photo-1574629810360-1ff1d17f4b80?q=80&w=1200&auto=format&fit=crop') center 20%/cover no-repeat; 
+            border-radius: 8px; padding: 40px 30px; position: relative; overflow: hidden; min-height: 240px; display: flex; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+        }
+        .hero-banner::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #0b1520 30%, rgba(11,21,32,0.6) 60%, transparent 100%); z-index: 1; }
+        .hero-text { position: relative; z-index: 2; max-width: 60%; }
+        .hero-text h1 { font-size: 22px; margin-bottom: 5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .hero-text h2 { font-size: 32px; color: var(--accent-blue); margin-bottom: 15px; font-weight: 900; line-height: 1.1; }
+        .hero-text p { font-size: 12px; color: var(--text-dark); margin-bottom: 20px; max-width: 80%; line-height: 1.4; }
+        .slider-dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 2; }
+        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 50%; cursor: pointer; }
+        .dot.active { background: white; }
+        .hero-watermark { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-size: 60px; font-weight: 900; font-style: italic; color: rgba(255,255,255,0.1); z-index: 1; letter-spacing: -2px; }
+
+        /* Horizontal Sports Nav */
+        .sports-nav-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+        .sport-pill { background: var(--bg-card); border-radius: 6px; padding: 10px 15px; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 80px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+        .sport-pill:hover, .sport-pill.active { background: var(--bg-hover); border-color: var(--accent-blue); }
+        .sport-pill.live { background: rgba(255,51,51,0.1); border-color: rgba(255,51,51,0.3); }
+        .sport-pill .icon { font-size: 18px; color: var(--accent-blue); }
+        .sport-pill.live .icon { color: var(--red-live); }
+        .sport-pill span { font-size: 10px; font-weight: 600; color: var(--text-dark); }
+
+        /* Section Headers */
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 10px; }
+        .section-title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+        .live-dot { width: 6px; height: 6px; background: var(--red-live); border-radius: 50%; box-shadow: 0 0 6px var(--red-live); animation: blink 1.5s infinite; }
+        .view-all { color: var(--accent-blue); font-size: 11px; cursor: pointer; text-decoration: none; font-weight: 600; transition: 0.2s; }
         .view-all:hover { text-decoration: underline; color: white; }
 
-        /* Sports Lists */
-        .bet-list-group { display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 15px; }
-        .league-header { background: var(--bg-hover); padding: 10px 15px; border-radius: 6px 6px 0 0; font-size: 12px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border-color); border-bottom: none; cursor: pointer; }
-        .match-row { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 15px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; border-radius: 0 0 6px 6px; border-bottom: none; }
-        .match-row:last-child { border-bottom: 1px solid var(--border-color); }
-        .match-row:hover { background: #15273a; }
-        .match-info-col { display: flex; flex-direction: column; gap: 8px; flex: 1; }
-        .team-line { display: flex; justify-content: space-between; align-items: center; padding-right: 30px; }
-        .team-name { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; cursor: pointer; }
-        .team-name:hover { color: var(--accent-blue); text-decoration: underline; }
-        .team-score { font-weight: 700; color: var(--accent-green); font-size: 12px; }
-        .team-score.inactive { color: var(--text-main); }
-        .match-status { display: flex; gap: 10px; font-size: 11px; color: var(--text-muted); margin-top: 4px; align-items: center; }
-        .live-badge { background: var(--accent-red); color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 9px; }
+        /* LIVE Events Carousel */
+        .live-carousel { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
+        .live-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; min-width: 320px; padding: 15px; display: flex; flex-direction: column; gap: 15px; position: relative; transition: 0.2s; }
+        .live-card:hover { border-color: var(--accent-blue); background: var(--bg-card); }
+        .live-card-header { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-weight: 600; }
+        .teams-area { display: flex; justify-content: space-between; align-items: center; }
+        .team { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 35%; text-align: center; }
+        .team-logo { width: 36px; height: 36px; background: var(--bg-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .team-name { font-size: 11px; font-weight: 600; color: var(--text-main); line-height: 1.2; }
+        .score-area { display: flex; flex-direction: column; align-items: center; width: 30%; }
+        .score-main { font-size: 20px; font-weight: 800; color: var(--accent-yellow); letter-spacing: 2px; }
+        .score-sub { font-size: 10px; color: var(--text-muted); margin-top: 4px; text-align: center; }
         
-        .odds-col { display: flex; gap: 6px; align-items: center; }
-        .odd-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 12px; min-width: 60px; text-align: center; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: 0.2s; }
-        .odd-box:hover:not(.locked) { border-color: var(--accent-blue); background: rgba(35, 140, 245, 0.1); transform: translateY(-2px); }
-        .odd-label { font-size: 10px; color: var(--text-muted); font-weight: 600; }
-        .odd-val { font-size: 13px; font-weight: 800; color: var(--accent-blue); }
-        .more-markets { color: var(--text-main); font-weight: 700; font-size: 12px; padding: 8px; cursor: pointer; border-radius: 4px; transition: 0.2s; border: 1px solid transparent; }
-        .more-markets:hover { background: var(--bg-hover); border-color: var(--border-color); }
+        .odds-row { display: flex; gap: 5px; }
+        .odd-btn { background: var(--bg-card); border-radius: 4px; padding: 6px; flex: 1; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; user-select: none; }
+        .odd-btn:hover:not(.locked) { background: rgba(35, 140, 245, 0.1); border-color: var(--accent-blue); }
+        .odd-btn.selected { background: var(--accent-blue); border-color: var(--accent-blue); }
+        .odd-btn.selected .odd-lbl, .odd-btn.selected .odd-val { color: white; }
+        .odd-lbl { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+        .odd-val { font-size: 12px; font-weight: 700; color: var(--accent-blue); }
 
-        /* Game Grids */
-        .games-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px;}
-        .game-thumb { aspect-ratio: 4/3; border-radius: 6px; display: flex; align-items: flex-end; padding: 12px; font-weight: 700; font-size: 13px; cursor: pointer; position: relative; overflow: hidden; box-shadow: inset 0 -40px 40px -10px rgba(0,0,0,0.9); border: 1px solid var(--border-color); transition: 0.3s; }
-        .game-thumb:hover { transform: translateY(-6px) scale(1.03); border-color: var(--text-main); box-shadow: inset 0 -40px 40px -10px rgba(0,0,0,0.9), 0 10px 20px rgba(0,0,0,0.5); z-index: 2; }
+        /* Game Thumbs (Images) */
+        .games-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 10px;}
+        .game-thumb { aspect-ratio: 1; border-radius: 8px; position: relative; overflow: hidden; cursor: pointer; transition: 0.3s; background-size: cover; background-position: center; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .game-thumb:hover { transform: translateY(-4px); box-shadow: 0 8px 15px rgba(0,0,0,0.5); border-color: var(--accent-blue); }
+        .game-thumb::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%); }
+        .game-title { position: absolute; bottom: 10px; left: 10px; z-index: 2; font-weight: 700; font-size: 11px; color: white; text-shadow: 1px 1px 2px black; }
+        .game-tag { position: absolute; top: 8px; right: 8px; font-size: 8px; padding: 2px 5px; border-radius: 3px; font-weight: 800; z-index: 2; background: var(--accent-red); text-transform: uppercase; }
+        .game-tag.new { background: var(--accent-green); }
         
-        .bg-crash { background: linear-gradient(45deg, #1a1543, #4a1c6a); }
-        .bg-aviator { background: linear-gradient(45deg, #510a12, #a51829); }
-        .bg-mines { background: linear-gradient(45deg, #093c6b, #1579d6); }
-        .bg-slots { background: linear-gradient(45deg, #7a2020, #d69800); }
-        .bg-wheel { background: linear-gradient(45deg, #7c4d00, #d69800); }
-        .bg-matka { background: linear-gradient(135deg, #0f2b15, #1d5229); }
-        .bg-roul { background: linear-gradient(135deg, #2b0f0f, #521d1d); }
-        .bg-bac { background: linear-gradient(135deg, #2b1d0f, #52381d); }
+        .bg-crash { background-image: url('https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?q=80&w=400&auto=format&fit=crop'); }
+        .bg-aviator { background-image: url('https://images.unsplash.com/photo-1540962351504-03099e0a754b?q=80&w=400&auto=format&fit=crop'); }
+        .bg-mines { background-image: url('https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=400&auto=format&fit=crop'); }
+        .bg-tower { background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400&auto=format&fit=crop'); }
+        .bg-wheel { background-image: url('https://images.unsplash.com/photo-1605810733844-38b49e3bf321?q=80&w=400&auto=format&fit=crop'); }
+        .bg-plinko { background-image: url('https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=400&auto=format&fit=crop'); }
+        
+        .bg-bj { background-image: url('https://images.unsplash.com/photo-1511193311914-0346f16efe90?q=80&w=400&auto=format&fit=crop'); }
+        .bg-roul { background-image: url('https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=400&auto=format&fit=crop'); }
+        .bg-bac { background-image: url('https://images.unsplash.com/photo-1541278107931-e006523892df?q=80&w=400&auto=format&fit=crop'); }
+        .bg-andar { background-image: url('https://images.unsplash.com/photo-1517594422361-5e18d4182414?q=80&w=400&auto=format&fit=crop'); }
+        .bg-teen { background-image: url('https://images.unsplash.com/photo-1623126908029-58cb08a2b272?q=80&w=400&auto=format&fit=crop'); }
+        .bg-light { background-image: url('https://images.unsplash.com/photo-1587304193563-63102c7e0c46?q=80&w=400&auto=format&fit=crop'); }
 
-        /* Right Sidebar Tabs */
-        .tabs { display: flex; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); }
-        .tab { flex: 1; text-align: center; padding: 12px 5px; cursor: pointer; font-size: 11px; font-weight: 600; color: var(--text-dark); border-bottom: 2px solid transparent; }
-        .tab.active { color: var(--text-main); border-bottom-color: var(--accent-blue); }
-        .btn-full { width: 100%; padding: 12px; font-size: 12px; background: var(--accent-blue); color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .btn-full:hover { background: var(--accent-blue-hover); }
+        /* Right Sidebar & Bet Slip Engine */
+        .right-sidebar { display: flex; flex-direction: column; gap: 15px; }
+        .bet-slip-panel { background: var(--bg-panel); border-radius: 6px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; max-height: calc(100vh - 120px); }
+        .tabs { display: flex; background: var(--bg-header); }
+        .tab { flex: 1; text-align: center; padding: 12px 5px; cursor: pointer; font-size: 10px; font-weight: 700; color: var(--text-dark); border-bottom: 2px solid transparent; }
+        .tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background: var(--bg-panel); }
+        .sub-tabs { display: flex; border-bottom: 1px solid var(--border-color); padding: 5px 10px; gap: 15px; }
+        .sub-tab { font-size: 10px; color: var(--text-muted); cursor: pointer; padding: 5px 0; }
+        .sub-tab.active { color: var(--text-main); font-weight: bold; }
+        
+        .bet-slip-empty { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 11px; }
+        .bet-slip-items { flex-grow: 1; overflow-y: auto; padding: 10px; display: none; flex-direction: column; gap: 10px; }
+        
+        .slip-item { background: var(--bg-card); border-radius: 4px; padding: 10px; border-left: 3px solid var(--accent-blue); position: relative; animation: slideInRight 0.2s ease-out; }
+        .slip-remove { position: absolute; right: 8px; top: 8px; cursor: pointer; color: var(--text-muted); font-size: 16px; transition: 0.2s; }
+        .slip-remove:hover { color: var(--accent-red); }
+        .slip-match { font-size: 10px; color: var(--text-muted); margin-bottom: 5px; padding-right: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .slip-selection { font-weight: 700; font-size: 12px; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
+        
+        .bet-slip-summary { padding: 15px; border-top: 1px solid var(--border-color); background: var(--bg-card); display: none; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11px; font-weight: 600; color: var(--text-dark); }
+        .summary-val { color: var(--text-main); font-weight: 800; font-variant-numeric: tabular-nums; }
+        .stake-input-group { display: flex; align-items: center; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px 10px; margin-bottom: 15px; }
+        .stake-input-group span { color: var(--text-muted); font-weight: bold; }
+        .stake-input-group input { flex: 1; background: transparent; border: none; color: white; text-align: right; font-size: 14px; font-weight: 800; outline: none; }
+        
+        .btn-full { width: 100%; padding: 14px; font-size: 11px; background: var(--accent-green); color: white; border: none; font-weight: 800; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        .btn-full:hover { background: var(--accent-green-hover); }
 
-        /* Legitimacy Footer */
-        footer { background: #060b11; border-top: 1px solid var(--border-color); padding: 40px 20px; margin-top: auto; }
-        .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; max-width: 1400px; margin: 0 auto; }
-        .footer-col h4 { color: white; font-size: 14px; margin-bottom: 15px; text-transform: uppercase; }
-        .footer-col ul { list-style: none; }
-        .footer-col ul li { color: var(--text-muted); font-size: 12px; margin-bottom: 10px; cursor: pointer; }
-        .footer-col ul li:hover { color: var(--accent-blue); text-decoration: underline; }
-        .trust-badges { display: flex; gap: 15px; margin-top: 20px; align-items: center; opacity: 0.6; }
-        .trust-badges span { font-size: 24px; font-weight: 900; border: 1px solid; padding: 4px 8px; border-radius: 4px; }
-        .copyright { text-align: center; color: var(--text-muted); font-size: 11px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color); }
-
-        /* Floating Chat Widget */
-        .live-chat { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: var(--accent-blue); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 1000; transition: 0.2s; }
-        .live-chat:hover { transform: scale(1.1); background: var(--accent-blue-hover); }
+        .live-now-list { background: var(--bg-panel); border-radius: 6px; border: 1px solid var(--border-color); padding: 10px; }
+        .mini-match { padding: 8px 0; border-bottom: 1px solid var(--border-color); }
+        .mini-match:last-child { border-bottom: none; }
+        .mini-league { font-size: 9px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .mini-teams { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; margin-bottom: 6px; }
+        .mini-score { color: var(--accent-yellow); font-variant-numeric: tabular-nums; }
+        
+        .promo-app { background: linear-gradient(180deg, #0b1520, #112030); border: 1px solid var(--accent-blue); border-radius: 6px; padding: 15px; text-align: center; cursor: pointer; }
+        .promo-app h4 { font-size: 14px; font-weight: 800; margin-bottom: 5px; }
+        .promo-app p { font-size: 10px; color: var(--text-muted); margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -141,18 +187,27 @@
     <header>
         <div class="header-left">
             <div class="logo" onclick="window.location.href='index.html'">1X<span>BET</span></div>
+            <span class="badge-app" onclick="window.location.href='index.html'">NEW APP</span>
+            <span style="margin-left:10px; color:var(--text-muted); font-size:16px; cursor:pointer;" onclick="window.location.href='index.html'">📱</span>
+            <span style="margin-left:5px; color:var(--text-muted); font-size:16px; cursor:pointer;" onclick="window.location.href='index.html'">💻</span>
             <ul class="nav-links">
-                <li class="active">SPORTS</li>
-                <li onclick="window.location.href='index.html'">LIVE</li>
-                <li onclick="window.location.href='all-games.html'">CASINO</li>
+                <li>SPORTS</li>
+                <li class="active">LIVE</li>
                 <li onclick="window.location.href='all-games.html'">1XGAMES</li>
-                <li style="color: var(--accent-green);" onclick="window.location.href='payments.html'">PAYMENTS</li>
+                <li onclick="window.location.href='all-games.html'">CASINO</li>
+                <li onclick="window.location.href='all-games.html'">LIVE CASINO</li>
+                <li onclick="window.location.href='esports.html'">ESPORTS</li>
+                <li onclick="window.location.href='all-games.html'">PROMO</li>
+                <li>MORE</li>
             </ul>
         </div>
         <div class="header-right">
             <button class="btn btn-outline" onclick="window.location.href='login.html'">LOG IN</button>
             <button class="btn btn-solid-green" onclick="window.location.href='signup.html'">REGISTRATION</button>
-            <span id="live-clock" style="font-size: 12px; font-weight: 600; color: var(--accent-blue); min-width: 100px; text-align: right; font-variant-numeric: tabular-nums;">🕒 Loading...</span>
+            <!-- Connected the gear icon to the Profile/KYC page -->
+            <span style="cursor: pointer; color: var(--text-dark); font-size: 16px; margin-left: 5px;" onclick="window.location.href='profile.html'">⚙️</span>
+            <span style="font-size: 11px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 4px;">⏱️ 15:30 ▾</span>
+            <span style="font-size: 11px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 4px;">🇬🇧 EN ▾</span>
         </div>
     </header>
 
@@ -160,24 +215,35 @@
         <!-- LEFT SIDEBAR -->
         <aside class="sidebar">
             <div class="menu-section">
-                <div class="menu-header">TOP Championships</div>
+                <div class="menu-header">TOP Championships <span style="font-size:14px; cursor:pointer;">›</span></div>
                 <ul class="menu-list">
-                    <li><div><span class="menu-icon">🏏</span> IPL Finals</div></li>
-                    <li><div><span class="menu-icon">⚽</span> UEFA Champions League</div></li>
-                    <li><div><span class="menu-icon">⚽</span> English Premier League</div></li>
-                    <li><div><span class="menu-icon">🏀</span> NBA Playoffs</div></li>
-                    <li><div><span class="menu-icon">🎮</span> CS:GO Major</div></li>
+                    <li onclick="window.location.href='football.html'"><div><span class="menu-icon">⚽</span> UEFA Champions League</div></li>
+                    <li onclick="window.location.href='football.html'"><div><span class="menu-icon">⚽</span> Premier League</div></li>
+                    <li onclick="window.location.href='football.html'"><div><span class="menu-icon">⚽</span> La Liga</div></li>
+                    <li onclick="window.location.href='football.html'"><div><span class="menu-icon">⚽</span> Serie A</div></li>
+                    <li onclick="window.location.href='football.html'"><div><span class="menu-icon">⚽</span> Bundesliga</div></li>
+                    <li onclick="window.location.href='basketball.html'"><div><span class="menu-icon">🏀</span> NBA</div></li>
+                    <li><div><span class="menu-icon">🥊</span> UFC</div></li>
+                    <li><div><span class="menu-icon">🏒</span> NHL</div></li>
+                    <li onclick="window.location.href='cricket.html'"><div><span class="menu-icon">🏏</span> Cricket World Cup</div></li>
+                    <li onclick="window.location.href='esports.html'"><div><span class="menu-icon">🎮</span> Esports</div></li>
                 </ul>
             </div>
             <div class="menu-section">
-                <div class="menu-header">ALL SPORTS</div>
+                <div class="menu-header">SPORTS</div>
+                <div class="time-filters">
+                    <span class="active">ALL</span><span>1H</span><span>3H</span><span>6H</span><span>12H</span><span>24H</span>
+                </div>
                 <ul class="menu-list">
-                    <li class="active"><div><span class="menu-icon">🏏</span> Cricket</div> <span class="count">245</span></li>
-                    <li><div><span class="menu-icon">⚽</span> Football</div> <span class="count">1,267</span></li>
-                    <li><div><span class="menu-icon">🎾</span> Tennis</div> <span class="count">342</span></li>
-                    <li><div><span class="menu-icon">🏀</span> Basketball</div> <span class="count">189</span></li>
-                    <li><div><span class="menu-icon">🎮</span> Esports</div> <span class="count">412</span></li>
-                    <li><div><span class="menu-icon">🏓</span> Table Tennis</div> <span class="count">88</span></li>
+                    <li onclick="window.location.href='football.html'"><div><span class="menu-icon">⚽</span> Football</div> <span class="count">1267</span></li>
+                    <li onclick="window.location.href='tennis.html'"><div><span class="menu-icon">🎾</span> Tennis</div> <span class="count">342</span></li>
+                    <li onclick="window.location.href='basketball.html'"><div><span class="menu-icon">🏀</span> Basketball</div> <span class="count">289</span></li>
+                    <li onclick="window.location.href='cricket.html'"><div><span class="menu-icon">🏏</span> Cricket</div> <span class="count">221</span></li>
+                    <li><div><span class="menu-icon">🏐</span> Volleyball</div> <span class="count">167</span></li>
+                    <li onclick="window.location.href='table-tennis.html'"><div><span class="menu-icon">🏓</span> Table Tennis</div> <span class="count">127</span></li>
+                    <li onclick="window.location.href='esports.html'"><div><span class="menu-icon">🎮</span> Esports</div> <span class="count">352</span></li>
+                    <li><div><span class="menu-icon">🏸</span> Badminton</div> <span class="count">98</span></li>
+                    <li style="color:var(--accent-blue); font-weight:600; margin-top:10px;" onclick="window.location.href='all-games.html'">A-Z Sports <span style="float:right;">›</span></li>
                 </ul>
             </div>
         </aside>
@@ -187,204 +253,238 @@
             <div class="hero-banner">
                 <div class="hero-text">
                     <h1>WELCOME BONUS</h1>
-                    <h2>100% UP TO ₹20,000</h2>
-                    <p>Make your first deposit and double your wallet instantly!</p>
-                    <button class="btn btn-solid-green" style="padding: 12px 25px; font-size: 14px;" onclick="window.location.href='signup.html'">CLAIM BONUS</button>
+                    <h2>100% UP TO ₹10,000</h2>
+                    <p>Make your first deposit and get 100% bonus up to ₹10,000!</p>
+                    <button class="btn btn-solid-green" style="padding: 10px 20px;" onclick="window.location.href='signup.html'">REGISTER NOW</button>
                 </div>
-                <div class="hero-graphic"></div>
+                <div class="hero-watermark">1XBET</div>
+                <div class="slider-dots">
+                    <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                </div>
             </div>
 
-            <div class="promo-banner" onclick="window.location.href='all-games.html'">
-                <div>
-                    <h3 style="color:white; font-size: 16px; margin-bottom: 5px;">ACCUMULATOR OF THE DAY</h3>
-                    <p style="color:var(--text-dark); font-size: 12px;">Place a multibet from our selected live events and get a 10% odds boost!</p>
-                </div>
-                <span style="font-size: 24px; font-weight: 900; color: var(--accent-yellow);">+10%</span>
+            <!-- Horizontal Nav Pills -->
+            <div class="sports-nav-row">
+                <div class="sport-pill live" onclick="window.location.href='index.html'"><span class="icon">LIVE</span><span>Live</span></div>
+                <div class="sport-pill" onclick="window.location.href='football.html'"><span class="icon">⚽</span><span>Football</span></div>
+                <div class="sport-pill" onclick="window.location.href='tennis.html'"><span class="icon">🎾</span><span>Tennis</span></div>
+                <div class="sport-pill" onclick="window.location.href='basketball.html'"><span class="icon">🏀</span><span>Basketball</span></div>
+                <div class="sport-pill" onclick="window.location.href='cricket.html'"><span class="icon">🏏</span><span>Cricket</span></div>
+                <div class="sport-pill" onclick="window.location.href='all-games.html'"><span class="icon">🎰</span><span>1xGames</span></div>
+                <div class="sport-pill" onclick="window.location.href='all-games.html'"><span class="icon">🎲</span><span>Casino</span></div>
+                <div class="sport-pill" onclick="window.location.href='all-games.html'"><span class="icon">🃏</span><span>Live Casino</span></div>
+                <div class="sport-pill" onclick="window.location.href='esports.html'"><span class="icon">🎮</span><span>Esports</span></div>
             </div>
 
-            <!-- CRICKET EVENTS -->
+            <!-- LIVE Events Carousel -->
             <div class="section-header">
-                <div class="section-title"><span class="live-dot"></span> 🏏 LIVE CRICKET</div>
-                <a href="cricket.html" class="view-all">View all Cricket</a>
+                <div class="section-title"><span class="live-dot"></span> LIVE <span style="color:var(--text-muted); font-size:10px; font-weight:normal;">120 Events</span></div>
+                <a href="all-games.html" class="view-all">View all</a>
             </div>
-            <div class="bet-list-group">
-                <div class="league-header">Test Matches. International</div>
-                <div class="match-row">
-                    <div class="match-info-col">
-                        <div class="team-line"><div class="team-name">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</div><div class="team-score inactive">290 & 208</div></div>
-                        <div class="team-line"><div class="team-name">🇵🇰 Pakistan</div><div class="team-score">🏏 110 & 80/3</div></div>
-                        <div class="match-status"><span class="live-badge">LIVE</span> 2nd test</div>
+            
+            <div class="live-carousel">
+                <!-- Football Card -->
+                <div class="live-card" onclick="window.location.href='football.html'" style="cursor:pointer;">
+                    <div class="live-card-header">
+                        <span>⚽ Football <br> UEFA Champions League</span>
                     </div>
-                    <div class="odds-col">
-                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">1.01</span></div>
-                        <div class="odd-box"><span class="odd-label">X</span><span class="odd-val">60.0</span></div>
-                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">9.85</span></div>
+                    <div class="teams-area">
+                        <div class="team">
+                            <div class="team-logo">🛡️</div>
+                            <div class="team-name">Man City</div>
+                        </div>
+                        <div class="score-area">
+                            <div class="score-main">2 : 1</div>
+                            <div class="score-sub">45:32<br>2nd Half</div>
+                        </div>
+                        <div class="team">
+                            <div class="team-logo">👑</div>
+                            <div class="team-name">Real Madrid</div>
+                        </div>
+                    </div>
+                    <div class="odds-row" onclick="event.stopPropagation();">
+                        <div class="odd-btn" data-match="MCI vs RMA" data-selection="W1" data-odd="1.65"><span class="odd-lbl">1</span><span class="odd-val">1.65</span></div>
+                        <div class="odd-btn" data-match="MCI vs RMA" data-selection="Draw" data-odd="3.80"><span class="odd-lbl">X</span><span class="odd-val">3.80</span></div>
+                        <div class="odd-btn" data-match="MCI vs RMA" data-selection="W2" data-odd="5.20"><span class="odd-lbl">2</span><span class="odd-val">5.20</span></div>
+                    </div>
+                </div>
+
+                <!-- Cricket Card -->
+                <div class="live-card" onclick="window.location.href='cricket.html'" style="cursor:pointer;">
+                    <div class="live-card-header">
+                        <span>🏏 Cricket <br> IPL 2024</span>
+                    </div>
+                    <div class="teams-area">
+                        <div class="team">
+                            <div class="team-logo" style="background:#004ba0;">🌀</div>
+                            <div class="team-name">MI</div>
+                        </div>
+                        <div class="score-area">
+                            <div class="score-main">175/6</div>
+                            <div class="score-sub" style="color:var(--text-main);">18.4 Overs</div>
+                        </div>
+                        <div class="team">
+                            <div class="team-logo" style="background:#ffff3c; color:black;">🦁</div>
+                            <div class="team-name">CSK</div>
+                        </div>
+                    </div>
+                    <div class="odds-row" onclick="event.stopPropagation();">
+                        <div class="odd-btn" data-match="MI vs CSK" data-selection="W1" data-odd="1.85"><span class="odd-lbl">1</span><span class="odd-val">1.85</span></div>
+                        <div class="odd-btn" data-match="MI vs CSK" data-selection="W2" data-odd="1.95"><span class="odd-lbl">2</span><span class="odd-val">1.95</span></div>
+                    </div>
+                </div>
+
+                <!-- Basketball Card -->
+                <div class="live-card" onclick="window.location.href='basketball.html'" style="cursor:pointer;">
+                    <div class="live-card-header">
+                        <span>🏀 Basketball <br> NBA</span>
+                    </div>
+                    <div class="teams-area">
+                        <div class="team">
+                            <div class="team-logo" style="background:#552583; color:#fdb927;">LAL</div>
+                            <div class="team-name">LAL</div>
+                        </div>
+                        <div class="score-area">
+                            <div class="score-main">68 : 72</div>
+                            <div class="score-sub">Q3 06:23</div>
+                        </div>
+                        <div class="team">
+                            <div class="team-logo" style="background:#007A33; color:white;">BOS</div>
+                            <div class="team-name">BOS</div>
+                        </div>
+                    </div>
+                    <div class="odds-row" onclick="event.stopPropagation();">
+                        <div class="odd-btn" data-match="LAL vs BOS" data-selection="W1" data-odd="1.78"><span class="odd-lbl">1</span><span class="odd-val">1.78</span></div>
+                        <div class="odd-btn" data-match="LAL vs BOS" data-selection="W2" data-odd="1.92"><span class="odd-lbl">2</span><span class="odd-val">1.92</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- FOOTBALL EVENTS -->
+            <!-- 1XGAMES -->
             <div class="section-header">
-                <div class="section-title"><span class="live-dot"></span> ⚽ LIVE FOOTBALL</div>
-                <a href="#" class="view-all">View all Football</a>
-            </div>
-            <div class="bet-list-group">
-                <div class="league-header">UEFA Champions League</div>
-                <div class="match-row" style="border-bottom: 1px solid var(--border-color); border-radius: 0;">
-                    <div class="match-info-col">
-                        <div class="team-line"><div class="team-name">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Manchester City</div><div class="team-score">2</div></div>
-                        <div class="team-line"><div class="team-name">🇪🇸 Real Madrid</div><div class="team-score">1</div></div>
-                        <div class="match-status"><span class="live-badge">LIVE</span> 2nd Half 68:12</div>
-                    </div>
-                    <div class="odds-col">
-                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">1.15</span></div>
-                        <div class="odd-box"><span class="odd-label">X</span><span class="odd-val">6.50</span></div>
-                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">15.0</span></div>
-                    </div>
-                </div>
-                <div class="league-header" style="border-radius: 0; border-top: none;">English Premier League</div>
-                <div class="match-row">
-                    <div class="match-info-col">
-                        <div class="team-line"><div class="team-name">🔴 Arsenal</div><div class="team-score inactive">0</div></div>
-                        <div class="team-line"><div class="team-name">🔵 Chelsea</div><div class="team-score inactive">0</div></div>
-                        <div class="match-status">Starts in: 02h 15m</div>
-                    </div>
-                    <div class="odds-col">
-                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">2.10</span></div>
-                        <div class="odd-box"><span class="odd-label">X</span><span class="odd-val">3.40</span></div>
-                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">3.65</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BASKETBALL & ESPORTS -->
-            <div class="section-header">
-                <div class="section-title"><span class="live-dot" style="background:var(--accent-yellow); box-shadow: 0 0 8px var(--accent-yellow);"></span> 🏀 BASKETBALL & 🎮 ESPORTS</div>
-            </div>
-            <div class="bet-list-group">
-                <div class="league-header">NBA Playoffs</div>
-                <div class="match-row" style="border-bottom: 1px solid var(--border-color); border-radius: 0;">
-                    <div class="match-info-col">
-                        <div class="team-line"><div class="team-name">🟡 LA Lakers</div><div class="team-score">102</div></div>
-                        <div class="team-line"><div class="team-name">🟢 Boston Celtics</div><div class="team-score">98</div></div>
-                        <div class="match-status"><span class="live-badge">LIVE</span> Q4 02:14</div>
-                    </div>
-                    <div class="odds-col">
-                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">1.08</span></div>
-                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">8.50</span></div>
-                    </div>
-                </div>
-                <div class="league-header" style="border-radius: 0; border-top: none;">CS:GO Major Championship</div>
-                <div class="match-row">
-                    <div class="match-info-col">
-                        <div class="team-line"><div class="team-name">🟡 Natus Vincere</div><div class="team-score">14</div></div>
-                        <div class="team-line"><div class="team-name">🔴 FaZe Clan</div><div class="team-score">15</div></div>
-                        <div class="match-status"><span class="live-badge">LIVE</span> Map 3 - Mirage</div>
-                    </div>
-                    <div class="odds-col">
-                        <div class="odd-box"><span class="odd-label">1</span><span class="odd-val">3.20</span></div>
-                        <div class="odd-box"><span class="odd-label">2</span><span class="odd-val">1.35</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CASINO CATALOG -->
-            <div class="section-header">
-                <div class="section-title">🎰 TOP CASINO & SLOTS</div>
-                <a href="all-games.html" class="view-all">View all Games</a>
+                <div class="section-title">1XGAMES</div>
+                <a href="all-games.html" class="view-all">View all</a>
             </div>
             <div class="games-grid">
-                <div class="game-thumb bg-crash" onclick="window.location.href='crash.html'">Crash <span style="position:absolute; top:5px; right:5px; font-size:10px; color:var(--accent-green);">LIVE</span></div>
-                <div class="game-thumb bg-aviator" onclick="window.location.href='aviator.html'">Aviator <span style="position:absolute; top:5px; right:5px; font-size:10px; color:var(--accent-yellow);">HOT</span></div>
-                <div class="game-thumb bg-slots">Crystal Slots</div>
-                <div class="game-thumb bg-slots">Wild West Gold</div>
-                <div class="game-thumb bg-wheel" onclick="window.location.href='wheel.html'">Lucky Wheel</div>
+                <div class="game-thumb bg-crash" onclick="window.location.href='crash.html'"><span class="game-tag">SPORT</span><span class="game-title">Crash</span></div>
+                <div class="game-thumb bg-aviator" onclick="window.location.href='aviator.html'"><span class="game-tag">HOT</span><span class="game-title">Aviator</span></div>
+                <div class="game-thumb bg-mines" onclick="window.location.href='mines.html'"><span class="game-title">Mines</span></div>
+                <div class="game-thumb bg-tower" onclick="window.location.href='chicken-rush.html'"><span class="game-tag new">NEW</span><span class="game-title">Tower</span></div>
+                <div class="game-thumb bg-wheel" onclick="window.location.href='wheel.html'"><span class="game-title">Lucky Wheel</span></div>
+                <div class="game-thumb bg-plinko" onclick="window.location.href='all-games.html'"><span class="game-title">Plinko</span></div>
             </div>
-            <div class="games-grid" style="margin-bottom: 20px;">
-                <div class="game-thumb bg-bj" onclick="window.location.href='matka.html'">Matka Live <span style="position:absolute; top:5px; right:5px; font-size:10px; color:var(--accent-yellow);">HOT</span></div>
-                <div class="game-thumb bg-roul" onclick="window.location.href='roulette.html'">Roulette Live</div>
-                <div class="game-thumb bg-bac" onclick="window.location.href='baccarat.html'">Baccarat Live</div>
-                <div class="game-thumb bg-bj" onclick="window.location.href='andar-bahar.html'">Andar Bahar</div>
-                <div class="game-thumb bg-roul" onclick="window.location.href='teen-patti.html'">Teen Patti</div>
+
+            <!-- CASINO -->
+            <div class="section-header">
+                <div class="section-title">CASINO</div>
+                <a href="all-games.html" class="view-all">View all</a>
+            </div>
+            <div class="games-grid" style="margin-bottom: 30px;">
+                <div class="game-thumb bg-bj" onclick="window.location.href='matka.html'"><span class="game-title">BLACKJACK<br><span style="font-size:8px; font-weight:normal;">LIVE</span></span></div>
+                <div class="game-thumb bg-roul" onclick="window.location.href='roulette.html'"><span class="game-title">ROULETTE<br><span style="font-size:8px; font-weight:normal;">LIVE</span></span></div>
+                <div class="game-thumb bg-bac" onclick="window.location.href='baccarat.html'"><span class="game-title">BACCARAT<br><span style="font-size:8px; font-weight:normal;">LIVE</span></span></div>
+                <div class="game-thumb bg-andar" onclick="window.location.href='andar-bahar.html'"><span class="game-title">ANDAR BAHAR<br><span style="font-size:8px; font-weight:normal;">LIVE</span></span></div>
+                <div class="game-thumb bg-teen" onclick="window.location.href='teen-patti.html'"><span class="game-title">TEEN PATTI<br><span style="font-size:8px; font-weight:normal;">LIVE</span></span></div>
+                <div class="game-thumb bg-light" onclick="window.location.href='all-games.html'"><span class="game-title">LIGHTNING<br>ROULETTE</span></div>
             </div>
         </main>
 
-        <!-- RIGHT SIDEBAR -->
-        <aside class="sidebar">
-            <div class="tabs">
-                <div class="tab active">BET SLIP</div>
-                <div class="tab">MY BETS</div>
-            </div>
-            <div style="background: var(--bg-panel); padding: 40px 20px; text-align: center; color: var(--text-muted); border-radius: 8px; margin-bottom: 15px; border: 1px dashed var(--border-color);">
-                <div style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;">🎫</div>
-                Your bet slip is empty.
-            </div>
-            <button class="btn-full" onclick="window.location.href='signup.html'">REGISTER AND PLACE BET</button>
-
-            <!-- Activity Feed -->
-            <div style="margin-top: 20px; background: var(--bg-panel); border-radius: 6px; border: 1px solid var(--border-color); overflow: hidden;">
-                <div style="padding: 10px 15px; background: var(--bg-card); font-size: 11px; font-weight: bold; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">🔴 LIVE WINNINGS</div>
-                <div style="padding: 10px; display: flex; flex-direction: column; gap: 8px;" id="liveFeed">
-                    <!-- JS Feed -->
+        <!-- RIGHT SIDEBAR (Interactive Bet Slip) -->
+        <aside class="right-sidebar">
+            <div class="bet-slip-panel">
+                <div class="tabs">
+                    <div class="tab active">BET SLIP (<span id="slipCount">0</span>)</div>
+                    <div class="tab">MY BETS</div>
                 </div>
+                <div class="sub-tabs">
+                    <span class="sub-tab active">SINGLE</span>
+                    <span class="sub-tab">MULTI BET</span>
+                    <span class="sub-tab">SYSTEM</span>
+                </div>
+                
+                <!-- Empty State -->
+                <div class="bet-slip-empty" id="emptySlip">
+                    <div style="font-size: 30px; margin-bottom: 10px; opacity: 0.5; color:var(--accent-blue);">🎫</div>
+                    Your bet slip is empty.<br>
+                    <span style="font-size:10px; display:block; margin-top:5px; padding: 0 10px;">Add events to the bet slip or enter a code to load events</span>
+                </div>
+
+                <!-- Active Bets Container -->
+                <div class="bet-slip-items" id="activeSlip" style="display: none; padding: 10px; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto;">
+                    <!-- JS Injects items here -->
+                </div>
+
+                <!-- Footer Summary & Stake -->
+                <div class="bet-slip-summary" id="slipSummary" style="display: none; padding: 15px; border-top: 1px solid var(--border-color); background: var(--bg-card);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11px; font-weight: 600; color: var(--text-dark);">
+                        <span>Overall Odds:</span>
+                        <span style="color: var(--text-main); font-weight: 800; font-variant-numeric: tabular-nums;" id="totalOdds">0.00</span>
+                    </div>
+                    <div style="display: flex; align-items: center; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px 10px; margin-bottom: 15px;">
+                        <span style="color: var(--text-muted); font-weight: bold;">₹</span>
+                        <input type="number" id="stakeInput" value="100" min="10" oninput="calculatePayout()" style="flex: 1; background: transparent; border: none; color: white; text-align: right; font-size: 14px; font-weight: 800; outline: none;">
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 15px;">
+                        <span style="color:var(--text-muted)">Potential Win:</span>
+                        <span style="color:var(--accent-green); font-size: 14px; font-weight: 800;" id="potentialWin">₹ 0.00</span>
+                    </div>
+                </div>
+
+                <button class="btn-full" id="placeBetBtn" style="border-radius: 0;" onclick="placeBet()">REGISTER AND PLACE BET</button>
+            </div>
+
+            <!-- LIVE NOW Mini List -->
+            <div class="live-now-list">
+                <div class="menu-header" style="padding:5px 0; border:none;">LIVE NOW <span class="view-all" onclick="window.location.href='all-games.html'">View all</span></div>
+                <div class="time-filters" style="padding:5px 0;">
+                    <span class="active">ALL</span><span onclick="window.location.href='football.html'">⚽</span><span onclick="window.location.href='tennis.html'">🎾</span><span onclick="window.location.href='basketball.html'">🏀</span><span onclick="window.location.href='cricket.html'">🏏</span><span onclick="window.location.href='esports.html'">🎮</span>
+                </div>
+                
+                <!-- Mini Match 1 -->
+                <div class="mini-match">
+                    <div class="mini-league"><span>⚽ UEFA Champions League</span><span>+128 ›</span></div>
+                    <div class="mini-teams"><span>🛡️ Man City</span><span class="mini-score">2</span></div>
+                    <div class="mini-teams"><span>👑 Real Madrid</span><span class="mini-score">1</span></div>
+                    <div class="odds-row" style="margin-top:5px;">
+                        <div class="odd-btn" data-match="MCI vs RMA" data-selection="W1" data-odd="1.65" style="padding:4px;"><span class="odd-lbl">1</span><span class="odd-val">1.65</span></div>
+                        <div class="odd-btn" data-match="MCI vs RMA" data-selection="Draw" data-odd="3.80" style="padding:4px;"><span class="odd-lbl">X</span><span class="odd-val">3.80</span></div>
+                        <div class="odd-btn" data-match="MCI vs RMA" data-selection="W2" data-odd="5.20" style="padding:4px;"><span class="odd-lbl">2</span><span class="odd-val">5.20</span></div>
+                    </div>
+                </div>
+
+                <!-- Mini Match 2 -->
+                <div class="mini-match">
+                    <div class="mini-league"><span>🏏 IPL 2024</span><span>+96 ›</span></div>
+                    <div class="mini-teams"><span>🌀 MI</span><span class="mini-score">175/6</span></div>
+                    <div class="mini-teams"><span>🦁 CSK</span><span class="mini-score" style="font-size:9px; font-weight:normal;">18.4 Overs</span></div>
+                    <div class="odds-row" style="margin-top:5px;">
+                        <div class="odd-btn" data-match="MI vs CSK" data-selection="W1" data-odd="1.85" style="padding:4px;"><span class="odd-lbl">1</span><span class="odd-val">1.85</span></div>
+                        <div class="odd-btn" data-match="MI vs CSK" data-selection="W2" data-odd="1.95" style="padding:4px;"><span class="odd-lbl">2</span><span class="odd-val">1.95</span></div>
+                    </div>
+                </div>
+
+                <!-- Mini Match 3 -->
+                <div class="mini-match">
+                    <div class="mini-league"><span>🏀 NBA</span><span>+72 ›</span></div>
+                    <div class="mini-teams"><span>🟣 LAL</span><span class="mini-score">68</span></div>
+                    <div class="mini-teams"><span>🟢 BOS</span><span class="mini-score">72</span></div>
+                    <div class="odds-row" style="margin-top:5px;">
+                        <div class="odd-btn" data-match="LAL vs BOS" data-selection="W1" data-odd="1.78" style="padding:4px;"><span class="odd-lbl">1</span><span class="odd-val">1.78</span></div>
+                        <div class="odd-btn" data-match="LAL vs BOS" data-selection="W2" data-odd="1.92" style="padding:4px;"><span class="odd-lbl">2</span><span class="odd-val">1.92</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="promo-app" onclick="window.location.href='index.html'">
+                <h4>DOWNLOAD 1XBET APP</h4>
+                <p>Get the best experience</p>
+                <button class="btn btn-outline" style="width:100%; border-color:var(--accent-blue); color:var(--accent-blue);">DOWNLOAD</button>
             </div>
         </aside>
     </div>
 
-    <!-- Compliance & Legitimacy Footer -->
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4>Information</h4>
-                <ul>
-                    <li>About Us</li>
-                    <li>Terms and Conditions</li>
-                    <li>Privacy Policy</li>
-                    <li>Cookie Policy</li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Betting</h4>
-                <ul>
-                    <li>Sports</li>
-                    <li>Live Casino</li>
-                    <li>Virtual Sports</li>
-                    <li>Live Results</li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Help & Support</h4>
-                <ul>
-                    <li>Contact Us</li>
-                    <li>FAQ</li>
-                    <li>Payment Methods</li>
-                    <li>Responsible Gaming</li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Secure Payments</h4>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <div style="background: white; color: #1a1f71; padding: 5px 10px; border-radius: 4px; font-weight: 900; font-style: italic;">VISA</div>
-                    <div style="background: #eb001b; color: white; padding: 5px 10px; border-radius: 4px; font-weight: 900; font-style: italic;">MasterCard</div>
-                    <div style="background: #f7931a; color: white; padding: 5px 10px; border-radius: 4px; font-weight: 900;">₿ BTC</div>
-                    <div style="background: #5f259f; color: white; padding: 5px 10px; border-radius: 4px; font-weight: 900;">UPI</div>
-                </div>
-                <div class="trust-badges">
-                    <span style="color: #ff3333; border-color: #ff3333;">18+</span>
-                    <span style="color: #5c9e28; border-color: #5c9e28; font-size: 12px; display: flex; align-items: center; text-align: center;">Curacao<br>eGaming</span>
-                    <span style="color: #a1b1c2; border-color: #a1b1c2; font-size: 14px;">SSL<br>SECURE</span>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            © 2026 1xBet. All rights reserved. Gambling can be addictive. Play responsibly.
-        </div>
-    </footer>
-
-    <!-- Floating Live Chat -->
-    <div class="live-chat" onclick="alert('Live Chat Agent connecting...')">💬</div>
-
     <script>
+        // --- 1. Live Clock ---
         function updateClock() {
             const now = new Date();
             const options = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
@@ -393,33 +493,138 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        const gamesList = ['Aviator', 'Crystal Slots', 'CS:GO Map 3', 'Live Roulette', 'NBA Lakers ML'];
-        const feedContainer = document.getElementById('liveFeed');
+        // --- 2. Interactive Bet Slip Engine ---
+        let betSlipData = [];
 
-        function generateActivity() {
-            const user = Math.floor(Math.random() * 9000) + 1000;
-            const win = new Intl.NumberFormat('en-IN').format((Math.random() * 80000 + 1000).toFixed(0));
-            const item = document.createElement('div');
-            item.style.cssText = 'font-size: 11px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px; border-left: 2px solid var(--accent-blue);';
-            item.innerHTML = `<strong>User_${user}</strong> won <span style="color:var(--accent-green);">₹${win}</span> on ${gamesList[Math.floor(Math.random() * gamesList.length)]}`;
-            feedContainer.prepend(item);
-            if (feedContainer.children.length > 4) feedContainer.removeChild(feedContainer.lastChild);
-        }
-        for(let i=0; i<4; i++) generateActivity();
-        setInterval(generateActivity, 4500);
+        const emptyUI = document.getElementById('emptySlip');
+        const activeUI = document.getElementById('activeSlip');
+        const summaryUI = document.getElementById('slipSummary');
+        const countUI = document.getElementById('slipCount');
+        const totalOddsUI = document.getElementById('totalOdds');
+        const stakeInput = document.getElementById('stakeInput');
+        const potentialWinUI = document.getElementById('potentialWin');
 
-        // Odds Interaction
-        document.querySelectorAll('.odd-box:not(.locked)').forEach(box => {
-            box.addEventListener('click', function() {
-                this.style.backgroundColor = 'var(--accent-blue)';
-                this.style.borderColor = 'var(--accent-blue)';
-                setTimeout(() => {
-                    alert('Odd added to betslip!');
+        document.querySelectorAll('.odd-btn').forEach(box => {
+            box.addEventListener('click', function(e) {
+                e.stopPropagation(); // prevent card click
+                
+                const match = this.getAttribute('data-match');
+                const selection = this.getAttribute('data-selection');
+                const odd = parseFloat(this.getAttribute('data-odd'));
+                if(!match) return; // ignore static placeholders if any
+                
+                const uniqueId = match + '-' + selection;
+                
+                if(this.classList.contains('selected')) {
+                    this.classList.remove('selected');
                     this.style.backgroundColor = '';
                     this.style.borderColor = '';
-                }, 300);
+                    betSlipData = betSlipData.filter(b => b.id !== uniqueId);
+                } else {
+                    const siblings = this.parentElement.querySelectorAll('.odd-btn');
+                    siblings.forEach(s => {
+                        s.classList.remove('selected');
+                        s.style.backgroundColor = '';
+                    });
+                    betSlipData = betSlipData.filter(b => b.match !== match);
+                    
+                    this.classList.add('selected');
+                    this.style.backgroundColor = 'var(--accent-blue)';
+                    this.style.borderColor = 'var(--accent-blue)';
+                    
+                    betSlipData.push({ id: uniqueId, match, selection, odd, elementRef: this });
+                }
+                
+                renderBetSlip();
             });
         });
+
+        function renderBetSlip() {
+            countUI.innerText = betSlipData.length;
+
+            if(betSlipData.length === 0) {
+                emptyUI.style.display = 'block';
+                activeUI.style.display = 'none';
+                summaryUI.style.display = 'none';
+                document.getElementById('placeBetBtn').innerText = 'REGISTER AND PLACE BET';
+                return;
+            }
+            
+            emptyUI.style.display = 'none';
+            activeUI.style.display = 'flex';
+            summaryUI.style.display = 'block';
+            document.getElementById('placeBetBtn').innerText = 'PLACE A BET';
+
+            activeUI.innerHTML = '';
+            let combinedOdds = 1.0;
+
+            betSlipData.forEach(bet => {
+                combinedOdds *= bet.odd;
+                
+                const item = document.createElement('div');
+                item.style.cssText = 'background: var(--bg-card); border-radius: 4px; padding: 10px; border-left: 3px solid var(--accent-blue); position: relative; animation: slideInRight 0.2s ease-out;';
+                item.innerHTML = `
+                    <div style="position: absolute; right: 8px; top: 8px; cursor: pointer; color: var(--text-muted); font-size: 16px;" onclick="removeBet('${bet.id}')">×</div>
+                    <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 5px; padding-right: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${bet.match}</div>
+                    <div style="font-weight: 700; font-size: 12px; display: flex; justify-content: space-between; color: white;">
+                        <span>${bet.selection}</span>
+                        <span style="color: var(--accent-blue); font-weight: 900;">${bet.odd.toFixed(2)}</span>
+                    </div>
+                `;
+                activeUI.appendChild(item);
+            });
+
+            totalOddsUI.innerText = combinedOdds.toFixed(2);
+            calculatePayout(combinedOdds);
+        }
+
+        function removeBet(id) {
+            const betToRemove = betSlipData.find(b => b.id === id);
+            if(betToRemove) {
+                betToRemove.elementRef.classList.remove('selected');
+                betToRemove.elementRef.style.backgroundColor = '';
+                betToRemove.elementRef.style.borderColor = '';
+            }
+            betSlipData = betSlipData.filter(b => b.id !== id);
+            renderBetSlip();
+        }
+
+        function calculatePayout(precalculatedOdds = null) {
+            const odds = precalculatedOdds || parseFloat(totalOddsUI.innerText);
+            const stake = parseFloat(stakeInput.value) || 0;
+            const payout = stake * odds;
+            
+            potentialWinUI.innerText = `₹ ${new Intl.NumberFormat('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(payout)}`;
+        }
+
+        window.removeBet = removeBet; // Expose to global scope for inline onclick
+
+        function placeBet() {
+            if(betSlipData.length === 0) {
+                window.location.href = 'signup.html';
+                return;
+            }
+            const stake = stakeInput.value;
+            const btn = document.getElementById('placeBetBtn');
+            const originalText = btn.innerText;
+            btn.innerText = 'PROCESSING...';
+            btn.style.opacity = '0.8';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert(`Successfully placed bet of ₹${stake} on ${betSlipData.length} selections!`);
+                betSlipData.forEach(b => {
+                    b.elementRef.classList.remove('selected');
+                    b.elementRef.style.backgroundColor = '';
+                    b.elementRef.style.borderColor = '';
+                });
+                betSlipData = [];
+                renderBetSlip();
+                btn.innerText = originalText;
+                btn.style.opacity = '1';
+                btn.disabled = false;
+            }, 1000);
+        }
     </script>
 </body>
 </html>
